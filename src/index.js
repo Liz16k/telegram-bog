@@ -3,6 +3,7 @@ const rateLimit = require("telegraf-ratelimit");
 const { BOT_TOKEN } = require("./config");
 const { GREETING, HELP } = require("./config/constants");
 const { handleWeatherCommand } = require("./controllers/weatherController");
+const { handleImageCommand } = require("./controllers/imageController");
 
 const bot = new Telegraf(BOT_TOKEN);
 const limitConfig = {
@@ -17,5 +18,7 @@ bot.start((ctx) => ctx.reply(GREETING));
 bot.help((ctx) => ctx.reply(HELP));
 
 bot.command("weather", handleWeatherCommand);
+bot.command("cat", handleImageCommand);
+bot.command("dog", handleImageCommand);
 
 bot.launch();
