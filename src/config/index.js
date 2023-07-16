@@ -1,4 +1,5 @@
-require("dotenv").config({ path: `.env.local` });
+require("dotenv").config();
+//console.log(process.env.BOT_TOKEN);
 
 module.exports = {
   BOT_TOKEN: process.env.BOT_TOKEN,
