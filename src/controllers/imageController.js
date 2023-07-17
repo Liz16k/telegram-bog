@@ -1,15 +1,17 @@
 const { getImgUrl } = require("../services/imageService");
-const { errorAPIResponse } = require("../utils/responses");
+//const { errorAPIResponse } = require("../utils/responses");
 
 async function handleImageCommand(ctx) {
-  const userMsg = ctx.message.text.split(" ");
+  const userMsg = await ctx.message.text.split(" ");
   const imgQuery = userMsg[0].slice(1);
-
+  ctx.reply('Подождите. Загружаю изображение...')
   try {
     const imgUrl = await getImgUrl(imgQuery);
-    ctx.sendPhoto(imgUrl);
+    imgUrl
+      ? ctx.sendPhoto(imgUrl)
+      : ctx.reply("Не удалось получить изображение. Попробуйте еще раз.");
   } catch (error) {
-    ctx.reply(errorAPIResponse(error));
+    ctx.reply("API response error \n" + error.response);
   }
 }
 
