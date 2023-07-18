@@ -1,5 +1,4 @@
 const { getImgUrl } = require("../services/imageService");
-//const { errorAPIResponse } = require("../utils/responses");
 
 async function handleImageCommand(ctx) {
   const userMsg = await ctx.message.text.split(" ");
