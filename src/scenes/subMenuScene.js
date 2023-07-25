@@ -1,16 +1,18 @@
 const { Scenes, Markup } = require("telegraf");
-const { fetchSubscriptions } = require("../services/subscriptionService");
-
 const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 
-subMenuScene.enter((ctx) => {
-  ctx.reply(
-    "Вы попали в меню управления подпиской на уведомления о погоде",
+subMenuScene.enter(async (ctx) => {
+  return await ctx.replyWithHTML(
+    `
+📃 <b>Мои подписки</b> --> список городов, на погоду в которых вы подписаны
+👀 <b>Оформить подписку</b> --> подписаться на ежедневное уведомление о погоде 
+❌ <b>Отменить подписку</b> --> отменить подписку на погоду 
+`,
     Markup.inlineKeyboard([
-      [Markup.button.callback("Мои подписки", "MY_SUBSCRIPTIONS")],
+      [Markup.button.callback("📃 Мои подписки", "MY_SUBSCRIPTIONS")],
       [
-        Markup.button.callback("Оформить подписку", "SUBSCRIBE"),
-        Markup.button.callback("Отменить подписку", "UNSUBSCRIBE"),
+        Markup.button.callback("👀 Оформить подписку", "SUBSCRIBE"),
+        Markup.button.callback("❌ Отменить подписку", "UNSUBSCRIBE"),
       ],
       [Markup.button.locationRequest("Отправить местоположение", "location")],
     ])
@@ -19,30 +21,15 @@ subMenuScene.enter((ctx) => {
   );
 });
 
-subMenuScene.action("MY_SUBSCRIPTIONS", async (ctx) => {
-  const userId = ctx.from.id;
-  const subscriptions = await fetchSubscriptions(userId);
-
-  if (subscriptions.length !== 0) {
-    ctx.reply(
-      subscriptions.reduce(
-        (res, sub) => `${res}\n${sub.location}`,
-        `Ваши текущие подписки:`
-      )
-    );
-  } else {
-    ctx.reply("У вас нет подписок на погоду");
-  }
-  ctx.scene.leave();
+subMenuScene.action("MY_SUBSCRIPTIONS", (ctx) => {
+  return ctx.scene.enter("mySubs");
 });
 
 subMenuScene.action("SUBSCRIBE", (ctx) => {
-  ctx.scene.enter("subscribe");
-  ctx.scene.leave();
+  return ctx.scene.enter("subscribe");
 });
 subMenuScene.action("UNSUBSCRIBE", (ctx) => {
-  ctx.scene.enter("unsubscribe");
-  ctx.scene.leave();
+  return ctx.scene.enter("unsubscribe");
 });
 
 module.exports = {

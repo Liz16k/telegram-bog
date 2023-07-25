@@ -1,6 +1,6 @@
 const { Telegraf, Scenes, session } = require("telegraf");
 const rateLimit = require("telegraf-ratelimit");
-const { BOT_TOKEN } = require("./config");
+const { BOT_TOKEN, DATABASE_URL } = require("./config");
 const {
   msgs: { GREETING, HELP },
 } = require("./config/constants");
@@ -10,40 +10,111 @@ const { weatherScene } = require("./scenes/weatherScene");
 const { subMenuScene } = require("./scenes/subMenuScene");
 const { unsubscribeScene } = require("./scenes/unsubscribeScene");
 const { subscribeScene } = require("./scenes/subscribeScene");
-
 const { handleSubCommand } = require("./controllers/subscriptionController");
+const { fetchSubscriptions } = require("./services/subscriptionService");
+const { iconMap } = require("./config/constants");
+const { getWeather } = require("./services/weatherService");
 const mongoose = require("mongoose");
+const { mySubsScene } = require("./scenes/mySubsScene");
 
-const bot = new Telegraf(BOT_TOKEN);
-const stage = new Scenes.Stage([
-  weatherScene,
-  subMenuScene,
-  subscribeScene,
-  unsubscribeScene,
-]);
-
-const dbURL =
-  "mongodb+srv://liz:admin@dbfortgchatbot.zaprkms.mongodb.net/?retryWrites=true&w=majority";
+const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 mongoose.connect(dbURL);
+mongoose.connection.on("error", (err) => {
+  console.error(
+    undefined,
+    `Error occurred during an attempt to establish connection with the database`,
+    err
+  );
+  process.exit(1);
+});
 
-const limitConfig = {
-  window: 1000,
-  limit: 1,
-  onLimitExceeded: (ctx) => ctx.reply("Rate limit exceeded"),
-};
+mongoose.connection.on("open", () => {
+  const bot = new Telegraf(BOT_TOKEN);
+  const stage = new Scenes.Stage([
+    weatherScene,
+    subMenuScene,
+    subscribeScene,
+    unsubscribeScene,
+    mySubsScene,
+  ]);
 
-bot.use(rateLimit(limitConfig));
-bot.use(session());
-bot.use(stage.middleware());
+  const limitConfig = {
+    window: 1000,
+    limit: 1,
+    onLimitExceeded: (ctx) => ctx.reply("Rate limit exceeded"),
+  };
 
-bot.start((ctx) => ctx.reply(GREETING));
-bot.help((ctx) => ctx.reply(HELP));
+  bot.use(rateLimit(limitConfig));
+  bot.use(session());
+  bot.use(stage.middleware());
 
-bot.command("cat", handleImageCommand);
-bot.command("dog", handleImageCommand);
-bot.command("weather", handleWeatherCommand);
-bot.command("subscription", handleSubCommand);
+  bot.start((ctx) => ctx.reply(GREETING));
+  bot.help((ctx) => ctx.reply(HELP));
 
-bot.launch();
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+  bot.command("cat", handleImageCommand);
+  bot.command("dog", handleImageCommand);
+  bot.command("weather", handleWeatherCommand);
+  bot.command("subscription", handleSubCommand);
+
+  bot.launch();
+  process.once("SIGINT", () => bot.stop("SIGINT"));
+  process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+  const cron = require("node-cron");
+
+  cron.schedule(
+    "0 9 * * *",
+    async () => {
+      try {
+        const docs = await fetchSubscriptions();
+        docs.forEach(async (subscriber) => {
+          subscriber.subscriptions.forEach(async (sub) => {
+            const { lat, lon, city } = sub.location;
+            let params = {
+              city,
+            };
+            if (lat & lon) {
+              params.lat = lat;
+              params.lon = lon;
+            }
+
+            const currentWeather = await getWeather(params);
+            const {
+              weather: [{ description, icon }],
+              main: { temp },
+              name,
+              wind: { speed },
+            } = currentWeather;
+            const userId = subscriber.userId;
+            const messageText = `
+        Погода сейчас (${name}):
+        ${iconMap[icon]} ${Math.round(temp)}°C,
+        ${description}
+        Ветер: ${speed} м/с
+        `;
+
+            bot.telegram
+              .sendMessage(userId, messageText)
+              .then(() => {
+                console.log(
+                  `Сообщение успешно отправлено на userId: ${userId}`
+                );
+                [];
+              })
+              .catch((error) => {
+                console.error(
+                  `Не удалось отправить сообщение на userId: ${userId}`,
+                  error.message
+                );
+              });
+          });
+        });
+      } catch (error) {
+        console.log(console.error());
+      }
+    },
+    {
+      timezone: "Europe/Minsk",
+    }
+  );
+});

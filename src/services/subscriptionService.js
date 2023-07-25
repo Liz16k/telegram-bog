@@ -1,44 +1,45 @@
-const { Subscription, fetchDBCollection } = require("../database");
+const { Subscription } = require("../models/Subscription");
+const { fetchDBCollection } = require("../database");
 const { Markup } = require("telegraf");
 
-async function fetchSubscriptions(userId) {
-  return await fetchDBCollection(Subscription, { userId: userId });
-}
-
-async function fetchUnsubListKeyboard(userId) {
+async function fetchSubscriptions(userId = null) {
   try {
-    const subs = await fetchSubscriptions(userId);
-    return Markup.inlineKeyboard(
-      subs.map((sub) => {
-        if (sub.location.city) {
-          return [
-            Markup.button.callback(
-              `${sub.location.city} ❌`,
-              JSON.stringify({
-                city: sub.location.city,
-                userId: sub.userId,
-              })
-            ),
-          ];
-        } else if (sub.location.lon) {
-          return [
-            Markup.button.callback(
-              "какие-то координаты ❌",
-              JSON.stringify({
-                lat: sub.location.lat,
-                lon: sub.location.lon,
-                userId: sub.userId,
-              })
-            ),
-          ];
-        }
-      })
-    )
-      .resize()
-      .oneTime();
+    const response = await fetchDBCollection(
+      Subscription,
+      userId ? { userId: userId } : {}
+    );
+    return response;
   } catch (error) {
     console.log(error.message);
   }
 }
 
-module.exports = { fetchSubscriptions, fetchUnsubListKeyboard };
+async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
+  try {
+    const userSubscriptionDoc = await fetchSubscriptions(userId);
+    let keyboard = Markup.inlineKeyboard([
+      ...userSubscriptionDoc[0].subscriptions.map((sub) => [
+        Markup.button.callback(
+          `${sub.location.city} ${btnChar}`,
+          JSON.stringify({
+            city: sub.location.city,
+            userId: userId,
+          })
+        ),
+      ]),
+      [
+        Markup.button.callback(
+          extraBtn.text,
+          JSON.stringify({ type: extraBtn.data })
+        ),
+      ],
+    ])
+      .resize()
+      .oneTime();
+    return keyboard;
+  } catch (error) {
+    console.log("fetchSubsListKeyboard ", error.message);
+  }
+}
+
+module.exports = { fetchSubscriptions, fetchSubsListKeyboard };

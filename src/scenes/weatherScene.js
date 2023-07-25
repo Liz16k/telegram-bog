@@ -1,5 +1,6 @@
 const { Scenes, Markup } = require("telegraf");
 const { getWeather } = require("../services/weatherService");
+const { getCityNameByCoordinates } = require("../services/weatherService");
 const { iconMap } = require("../config/constants");
 
 const weatherScene = new Scenes.BaseScene("weather");
@@ -20,10 +21,9 @@ weatherScene.on("message", async (ctx) => {
   try {
     let params;
     if (ctx.message.location) {
-      params = {
-        lat: ctx.message.location.latitude,
-        lon: ctx.message.location.longitude,
-      };
+      const { latitude: lat, longitude: lon } = ctx.message.location;
+      params = { lat, lon };
+      params.city = await getCityNameByCoordinates({ lat, lon });
     } else {
       params = { city: ctx.message.text };
     }
