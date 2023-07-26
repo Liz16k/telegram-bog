@@ -10,7 +10,12 @@ const { weatherScene } = require("./scenes/weatherScene");
 const { subMenuScene } = require("./scenes/subMenuScene");
 const { unsubscribeScene } = require("./scenes/unsubscribeScene");
 const { subscribeScene } = require("./scenes/subscribeScene");
+const { recommendMenuScene } = require("./scenes/recommend/recommendMenuScene");
+const { cafeScene } = require("./scenes/recommend/cafeScene");
+const { attractionsScene } = require("./scenes/recommend/attractionsScene");
+const { eventScene } = require("./scenes/recommend/eventsScene");
 const { handleSubCommand } = require("./controllers/subscriptionController");
+const { handleReccomendCommand } = require("./controllers/recommendController");
 const { fetchSubscriptions } = require("./services/subscriptionService");
 const { iconMap } = require("./config/constants");
 const { getWeather } = require("./services/weatherService");
@@ -36,6 +41,10 @@ mongoose.connection.on("open", () => {
     subscribeScene,
     unsubscribeScene,
     mySubsScene,
+    recommendMenuScene,
+    cafeScene,
+    attractionsScene,
+    eventScene,
   ]);
 
   const limitConfig = {
@@ -55,6 +64,7 @@ mongoose.connection.on("open", () => {
   bot.command("dog", handleImageCommand);
   bot.command("weather", handleWeatherCommand);
   bot.command("subscription", handleSubCommand);
+  bot.command("recommendation", handleReccomendCommand);
 
   bot.launch();
   process.once("SIGINT", () => bot.stop("SIGINT"));
@@ -110,7 +120,7 @@ mongoose.connection.on("open", () => {
           });
         });
       } catch (error) {
-        console.log(console.error());
+        console.log(error.message);
       }
     },
     {
