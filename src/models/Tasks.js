@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 
 const TaskScheme = {
-  text: String,
+  name: String,
   dueDate: Date,
   status: String,
+  reminder: Boolean,
+  interval: Number,
 };
 
 const TasksSchema = {
