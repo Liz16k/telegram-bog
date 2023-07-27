@@ -14,8 +14,14 @@ const { recommendMenuScene } = require("./scenes/recommend/recommendMenuScene");
 const { cafeScene } = require("./scenes/recommend/cafeScene");
 const { attractionsScene } = require("./scenes/recommend/attractionsScene");
 const { eventScene } = require("./scenes/recommend/eventsScene");
+const { createTaskScene } = require("./scenes/tasks/createTaskScene");
+const { myTasksScene } = require("./scenes/tasks/myTasksScene");
 const { handleSubCommand } = require("./controllers/subscriptionController");
 const { handleReccomendCommand } = require("./controllers/recommendController");
+const {
+  handleTaskCommand,
+  handleMyTasksCommand,
+} = require("./controllers/taskController");
 const { fetchSubscriptions } = require("./services/subscriptionService");
 const { iconMap } = require("./config/constants");
 const { getWeather } = require("./services/weatherService");
@@ -45,6 +51,8 @@ mongoose.connection.on("open", () => {
     cafeScene,
     attractionsScene,
     eventScene,
+    createTaskScene,
+    myTasksScene,
   ]);
 
   const limitConfig = {
@@ -65,6 +73,8 @@ mongoose.connection.on("open", () => {
   bot.command("weather", handleWeatherCommand);
   bot.command("subscription", handleSubCommand);
   bot.command("recommendation", handleReccomendCommand);
+  bot.command("createTask", handleTaskCommand);
+  bot.command("myTasks", handleMyTasksCommand);
 
   bot.launch();
   process.once("SIGINT", () => bot.stop("SIGINT"));
