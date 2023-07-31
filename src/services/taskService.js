@@ -1,3 +1,4 @@
+const { Markup } = require("telegraf");
 const { Tasks } = require("../models/Tasks");
 
 async function fetchUserTasks(userId) {
@@ -33,7 +34,6 @@ async function deleteTaskFromDB(userId, taskId) {
     const taskIndex = tasksDoc.tasks.findIndex(
       (task) => task._id.toString() === taskId
     );
-
     tasksDoc.tasks.splice(taskIndex, 1);
     await tasksDoc.save();
   } catch (error) {
@@ -42,8 +42,26 @@ async function deleteTaskFromDB(userId, taskId) {
   }
 }
 
+async function fetchTasksListKeyboard(userId) {
+  const tasks = await fetchUserTasks(userId);
+  console.log(tasks);
+  let keyboard = Markup.inlineKeyboard([
+    ...tasks.map((task, i) => [
+      Markup.button.callback(
+        `${i + 1}. ${task.name} (${task.status}) ❌`,
+        ["delete", i, userId].join("_")
+      ),
+    ]),
+    [Markup.button.callback("Выйти", "exit")],
+  ])
+    .resize()
+    .oneTime();
+  return keyboard;
+}
+
 module.exports = {
   saveTaskToDB,
   deleteTaskFromDB,
   fetchUserTasks,
+  fetchTasksListKeyboard,
 };
