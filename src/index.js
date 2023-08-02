@@ -22,11 +22,9 @@ const {
   handleTaskCommand,
   handleMyTasksCommand,
 } = require("./controllers/taskController");
-const { fetchSubscriptions } = require("./services/subscriptionService");
-const { iconMap } = require("./config/constants");
-const { getWeather } = require("./services/weatherService");
 const mongoose = require("mongoose");
 const { mySubsScene } = require("./scenes/mySubsScene");
+const { weatherSheduler } = require("./utils/shedulers,js");
 
 const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 mongoose.connect(dbURL);
@@ -77,64 +75,9 @@ mongoose.connection.on("open", () => {
   bot.command("myTasks", handleMyTasksCommand);
 
   bot.launch();
+
   process.once("SIGINT", () => bot.stop("SIGINT"));
   process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-  const cron = require("node-cron");
-
-  cron.schedule(
-    "0 9 * * *",
-    async () => {
-      try {
-        const docs = await fetchSubscriptions();
-        docs.forEach(async (subscriber) => {
-          subscriber.subscriptions.forEach(async (sub) => {
-            const { lat, lon, city } = sub.location;
-            let params = {
-              city,
-            };
-            if (lat & lon) {
-              params.lat = lat;
-              params.lon = lon;
-            }
-
-            const currentWeather = await getWeather(params);
-            const {
-              weather: [{ description, icon }],
-              main: { temp },
-              name,
-              wind: { speed },
-            } = currentWeather;
-            const userId = subscriber.userId;
-            const messageText = `
-        Погода сейчас (${name}):
-        ${iconMap[icon]} ${Math.round(temp)}°C,
-        ${description}
-        Ветер: ${speed} м/с
-        `;
-
-            bot.telegram
-              .sendMessage(userId, messageText)
-              .then(() => {
-                console.log(
-                  `Сообщение успешно отправлено на userId: ${userId}`
-                );
-                [];
-              })
-              .catch((error) => {
-                console.error(
-                  `Не удалось отправить сообщение на userId: ${userId}`,
-                  error.message
-                );
-              });
-          });
-        });
-      } catch (error) {
-        console.log(error.message);
-      }
-    },
-    {
-      timezone: "Europe/Minsk",
-    }
-  );
+  weatherSheduler(bot);
 });
