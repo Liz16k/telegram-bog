@@ -26,7 +26,7 @@ cafeScene.on("message", async (ctx) => {
       ctx.reply("Данные загружаются...");
       ctx.reply("Ближайшие кафе:");
 
-      for (const place of data.entries()) {
+      for (const place of data) {
         const { formatted, distance } = place.properties;
         await ctx.replyWithHTML(` 🥞 <b>${formatted}</b>\n${distance}м`);
       }

@@ -23,8 +23,8 @@ attractionsScene.on("message", async (ctx) => {
       const { latitude: lat, longitude: lon } = ctx.message.location;
       const data = await attractionsSearch({ lat, lon });
 
-      ctx.reply("Данные загружаются...");
-      ctx.reply("Ближайшие достопримечательности:");
+      await ctx.reply("Данные загружаются...");
+      await ctx.reply("Ближайшие достопримечательности:");
 
       for (const [i, place] of data.entries()) {
         const { name, formatted, distance } = await place.properties;
