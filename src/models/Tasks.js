@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const TaskScheme = {
   name: String,
-  dueDate: Date,
   status: String,
   reminder: Boolean,
+  shedulerId: String,
   interval: Number,
 };
 

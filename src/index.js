@@ -24,7 +24,7 @@ const {
 } = require("./controllers/taskController");
 const mongoose = require("mongoose");
 const { mySubsScene } = require("./scenes/mySubsScene");
-const { weatherSheduler } = require("./utils/shedulers,js");
+const { weatherSheduler, taskSheduler } = require("./utils/shedulers");
 
 const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 mongoose.connect(dbURL);
@@ -80,4 +80,5 @@ mongoose.connection.on("open", () => {
   process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
   weatherSheduler(bot);
+  taskSheduler(bot);
 });

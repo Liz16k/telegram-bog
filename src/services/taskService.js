@@ -11,6 +11,17 @@ async function fetchUserTasks(userId) {
     return [];
   }
 }
+
+const fetchUsersTasks = async () => {
+  try {
+    const tasks = await Tasks.find();
+    return tasks;
+  } catch (error) {
+    console.error('Ошибка при получении задач из базы данных:', error);
+    return [];
+  }
+};
+
 async function saveTaskToDB(userId, taskData) {
   try {
     const tasksDoc = await Tasks.findOne({ userId });
@@ -63,5 +74,5 @@ module.exports = {
   saveTaskToDB,
   deleteTaskFromDB,
   fetchUserTasks,
-  fetchTasksListKeyboard,
+  fetchTasksListKeyboard,fetchUsersTasks
 };

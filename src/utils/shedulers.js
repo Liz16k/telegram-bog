@@ -1,7 +1,52 @@
 const { fetchSubscriptions } = require("../services/subscriptionService");
 const { iconMap } = require("../config/constants");
 const { getWeather } = require("../services/weatherService");
+const { fetchUsersTasks } = require("../services/taskService");
 const cron = require("node-cron");
+
+const tasksShedulers = {};
+
+const createTaskScheduler = ({ ctx, bot, task, userId }) => {
+  task ??= ctx.wizard.state;
+  bot ??= ctx.bot;
+  userId ??= ctx.update.callback_query.from.id;
+  const { name, interval } = task;
+  return cron.schedule(
+    `* */${interval} * * *`,
+    () => {
+      console.log("NOTIFICATION");
+      bot.telegram
+        .sendMessage(userId, `Пора выполнить задачу: ${name}`)
+        .then(() => {
+          console.log(`Сообщение успешно отправлено на userId: ${userId}`);
+        })
+        .catch((error) => {
+          console.error(
+            `Не удалось отправить сообщение на userId: ${userId}`,
+            error.message
+          );
+        });
+    },
+    {
+      timezone: "Europe/Minsk",
+    }
+  );
+};
+
+const taskSheduler = async (bot) => {
+  const usersTasks = await fetchUsersTasks();
+  usersTasks.forEach(async (user) => {
+    const userId = user.userId;
+    user.tasks
+      .filter((task) => task.reminder)
+      .forEach((task) => {
+        const shedule = createTaskScheduler({ bot, task, userId });
+        task.shedulerId = shedule.options.name;
+        tasksShedulers[shedule.options.name];
+      });
+    await user.save();
+  });
+};
 
 const weatherSheduler = (bot) => {
   cron.schedule(
@@ -63,4 +108,4 @@ const weatherNotificate = async (bot) => {
   }
 };
 
-module.exports = { weatherSheduler };
+module.exports = { weatherSheduler, taskSheduler, createTaskScheduler };

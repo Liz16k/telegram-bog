@@ -1,5 +1,6 @@
 const { Scenes, Markup } = require("telegraf");
 const { saveTaskToDB } = require("../../services/taskService");
+const { createTaskScheduler } = require("../../utils/shedulers");
 
 const createTaskScene = new Scenes.WizardScene(
   "createTask",
@@ -24,7 +25,12 @@ const createTaskScene = new Scenes.WizardScene(
     if (ctx.callbackQuery.data === "REMINDER_YES") {
       ctx.wizard.state.reminder = true;
       ctx.reply(
-        'Введите крайний срок выполнения задачи (например, "2023-12-31 23:59"):'
+        "Как часто вы хотите получать уведомление о задаче? (каждые ... часов):",
+        Markup.inlineKeyboard([
+          Markup.button.callback("Ежедневно", "DAILY"),
+          Markup.button.callback("Каждые 4 часа", "FOUR_HOURLY"),
+          Markup.button.callback("Каждый час", "HOURLY"),
+        ])
       );
       return ctx.wizard.next();
     } else {
@@ -33,18 +39,6 @@ const createTaskScene = new Scenes.WizardScene(
       ctx.reply("Задача успешно создана!");
       return ctx.scene.leave();
     }
-  },
-  async (ctx) => {
-    ctx.wizard.state.dueDate = ctx.message.text;
-    ctx.reply(
-      "Как часто вы хотите получать уведомление о задаче? (каждые ... часов):",
-      Markup.inlineKeyboard([
-        Markup.button.callback("Ежедневно", "DAILY"),
-        Markup.button.callback("Каждые полчаса", "HALF_HOURLY"),
-        Markup.button.callback("Каждый час", "HOURLY"),
-      ])
-    );
-    return ctx.wizard.next();
   },
   async (ctx) => {
     const userId = ctx.update.callback_query.from.id;
@@ -58,8 +52,8 @@ const createTaskScene = new Scenes.WizardScene(
         ctx.wizard.state.interval = 1;
         break;
       }
-      case "HALF_HOURLY": {
-        ctx.wizard.state.interval = 0.5;
+      case "FOUR_HOURLY": {
+        ctx.wizard.state.interval = 4;
         break;
       }
       default: {
@@ -67,6 +61,8 @@ const createTaskScene = new Scenes.WizardScene(
         if (!isNaN(interval)) ctx.wizard.state.interval = interval;
       }
     }
+
+    ctx.wizard.state.shedulerId = createTaskScheduler({ ctx }).options.name;
     await saveTaskToDB(userId, ctx.wizard.state);
     ctx.reply("Задача успешно создана!");
 
