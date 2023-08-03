@@ -1,10 +1,8 @@
 const { fetchSubscriptions } = require("../services/subscriptionService");
 const { iconMap } = require("../config/constants");
 const { getWeather } = require("../services/weatherService");
-const { fetchUsersTasks } = require("../services/taskService");
+const { Tasks } = require("../models/Tasks");
 const cron = require("node-cron");
-
-const tasksShedulers = {};
 
 const createTaskScheduler = ({ ctx, bot, task, userId }) => {
   task ??= ctx.wizard.state;
@@ -41,7 +39,6 @@ const taskSheduler = async (bot) => {
       .forEach((task) => {
         const shedule = createTaskScheduler({ bot, task, userId });
         task.shedulerId = shedule.options.name;
-        tasksShedulers[shedule.options.name];
       });
     await user.save();
   });
@@ -107,4 +104,18 @@ const weatherNotificate = async (bot) => {
   }
 };
 
-module.exports = { weatherSheduler, taskSheduler, createTaskScheduler };
+const fetchUsersTasks = async () => {
+  try {
+    const tasks = await Tasks.find();
+    return tasks;
+  } catch (error) {
+    console.error("Ошибка при получении задач из базы данных:", error);
+    return [];
+  }
+};
+
+module.exports = {
+  weatherSheduler,
+  taskSheduler,
+  createTaskScheduler,
+};

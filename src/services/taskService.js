@@ -1,5 +1,6 @@
 const { Markup } = require("telegraf");
 const { Tasks } = require("../models/Tasks");
+const cron = require("node-cron");
 
 async function fetchUserTasks(userId) {
   try {
@@ -11,16 +12,6 @@ async function fetchUserTasks(userId) {
     return [];
   }
 }
-
-const fetchUsersTasks = async () => {
-  try {
-    const tasks = await Tasks.find();
-    return tasks;
-  } catch (error) {
-    console.error('Ошибка при получении задач из базы данных:', error);
-    return [];
-  }
-};
 
 async function saveTaskToDB(userId, taskData) {
   try {
@@ -45,12 +36,18 @@ async function deleteTaskFromDB(userId, taskId) {
     const taskIndex = tasksDoc.tasks.findIndex(
       (task) => task._id.toString() === taskId
     );
-    tasksDoc.tasks.splice(taskIndex, 1);
+    const task = tasksDoc.tasks.splice(taskIndex, 1);
+    deleteTaskSheduler(task[0].shedulerId);
     await tasksDoc.save();
   } catch (error) {
     console.error("Ошибка при удалении задачи:", error.message);
     throw error;
   }
+}
+
+async function deleteTaskSheduler(shedulerId) {
+  const sheduler = cron.getTasks().get(shedulerId);
+  sheduler.stop();
 }
 
 async function fetchTasksListKeyboard(userId) {
@@ -73,5 +70,6 @@ module.exports = {
   saveTaskToDB,
   deleteTaskFromDB,
   fetchUserTasks,
-  fetchTasksListKeyboard,fetchUsersTasks
+  fetchTasksListKeyboard,
+  fetchUserTasks,
 };

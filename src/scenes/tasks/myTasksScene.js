@@ -1,8 +1,7 @@
-const { Scenes, Markup } = require("telegraf");
+const { Scenes } = require("telegraf");
 const {
   fetchTasksListKeyboard,
   deleteTaskFromDB,
-  fetchUserTasks,
 } = require("../../services/taskService");
 
 const myTasksScene = new Scenes.BaseScene("myTasks");
@@ -39,7 +38,6 @@ myTasksScene.on("callback_query", async (ctx) => {
 
     await ctx.answerCbQuery("Задача удалена");
   } else if (action === "exit") {
-    const tasks = await fetchUserTasks(userId);
 
     await ctx.telegram.editMessageText(
       chatId,
