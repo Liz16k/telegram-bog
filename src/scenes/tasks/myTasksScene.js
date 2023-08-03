@@ -23,7 +23,6 @@ myTasksScene.enter(async (ctx) => {
 
 myTasksScene.on("callback_query", async (ctx) => {
   const [action, taskId, userId] = await ctx.callbackQuery.data.split("_");
-  console.log(action);
   const chatId = await ctx.session?.taskListMsg?.chatId;
   const messageId = await ctx.session?.taskListMsg?.messageId;
 
