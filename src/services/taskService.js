@@ -55,7 +55,6 @@ async function deleteTaskFromDB(userId, taskId) {
 
 async function fetchTasksListKeyboard(userId) {
   const tasks = await fetchUserTasks(userId);
-  console.log(tasks);
   let keyboard = Markup.inlineKeyboard([
     ...tasks.map((task, i) => [
       Markup.button.callback(

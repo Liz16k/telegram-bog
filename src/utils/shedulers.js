@@ -12,9 +12,8 @@ const createTaskScheduler = ({ ctx, bot, task, userId }) => {
   userId ??= ctx.update.callback_query.from.id;
   const { name, interval } = task;
   return cron.schedule(
-    `* */${interval} * * *`,
+    `0 */${interval} * * *`,
     () => {
-      console.log("NOTIFICATION");
       bot.telegram
         .sendMessage(userId, `Пора выполнить задачу: ${name}`)
         .then(() => {
