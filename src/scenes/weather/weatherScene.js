@@ -1,7 +1,6 @@
 import { Scenes, Markup } from "telegraf";
-import { getWeather } from "../../services/weatherService";
-import { getCityNameByCoordinates } from "../../services/weatherService";
-import { iconMap } from "../../config/constants";
+import { getWeather, getCityNameByCoordinates } from "../../services/weatherService.js";
+import { iconMap } from "../../config/constants.js";
 
 const weatherScene = new Scenes.BaseScene("weather");
 
@@ -53,4 +52,4 @@ weatherScene.on("message", async (ctx) => {
   ctx.scene.leave();
 });
 
-export default { weatherScene };
+export { weatherScene };

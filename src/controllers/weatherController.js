@@ -1,5 +1,5 @@
 function handleWeatherCommand(ctx) {
-  return ctx.scene.enter("weather")
+  return ctx.scene.enter("weather");
 }
 
-export default { handleWeatherCommand };
+export { handleWeatherCommand };

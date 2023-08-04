@@ -1,4 +1,4 @@
-export { recommendMenuScene } from "./recommendMenuScene";
-export { cafeScene } from "./cafeScene";
-export { attractionsScene } from "./attractionsScene";
-export { eventScene } from "./eventsScene";
+export { recommendMenuScene } from "./recommendMenuScene.js";
+export { cafeScene } from "./cafeScene.js";
+export { attractionsScene } from "./attractionsScene.js";
+export { eventScene } from "./eventsScene.js";

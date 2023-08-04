@@ -1,5 +1,5 @@
-export { handleImageCommand } from "./imageController";
-export { handleReccomendCommand } from "./recommendController";
-export { handleSubCommand } from "./subscriptionController";
-export { handleWeatherCommand } from "./weatherController";
-export { handleTaskCommand, handleMyTasksCommand } from "./taskController";
+export { handleImageCommand } from "./imageController.js";
+export { handleReccomendCommand } from "./recommendController.js";
+export { handleSubCommand } from "./subscriptionController.js";
+export { handleWeatherCommand } from "./weatherController.js";
+export { handleTaskCommand, handleMyTasksCommand } from "./taskController.js";

@@ -1,6 +1,6 @@
 import { getTasks } from "node-cron";
 import { Markup } from "telegraf";
-import { Tasks } from "../models/Tasks";
+import { Tasks } from "../models/Tasks.js";
 
 async function fetchUserTasks(userId) {
   try {
@@ -77,11 +77,10 @@ async function fetchTasksListKeyboard(userId) {
   return keyboard;
 }
 
-export default {
+export {
   saveTaskToDB,
   deleteTaskFromDB,
   fetchUserTasks,
   fetchTasksListKeyboard,
-  fetchUserTasks,
   fetchUsersTasks,
 };

@@ -1,5 +1,5 @@
 import { Scenes, Markup } from "telegraf";
-import { eventsSearch } from "../../services/recommendService";
+import { eventsSearch } from "../../services/recommendService.js";
 
 const eventScene = new Scenes.BaseScene("events");
 eventScene.enter(async (ctx) => {

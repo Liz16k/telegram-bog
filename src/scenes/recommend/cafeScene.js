@@ -1,5 +1,5 @@
 import { Scenes, Markup } from "telegraf";
-import { cafeSearch } from "../../services/recommendService";
+import { cafeSearch } from "../../services/recommendService.js";
 
 const cafeScene = new Scenes.BaseScene("cafe");
 cafeScene.enter(async (ctx) => {

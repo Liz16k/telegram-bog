@@ -1,21 +1,23 @@
 import { Telegraf, Scenes, session } from "telegraf";
 import rateLimit from "telegraf-ratelimit";
-import { connect, connection } from "mongoose";
-import { BOT_TOKEN, DATABASE_URL } from "./config";
-import constants from "./config/constants";
-import * as controllers from "./controllers";
-import { weatherScene } from "./scenes/weather/weatherScene";
-import { mySubsScene, subscribeScene, subMenuScene, unsubscribeScene } from "./scenes/subs";
-import { recommendMenuScene, attractionsScene, cafeScene, eventScene } from "./scenes/recommend";
-import { createTaskScene, myTasksScene } from "./scenes/tasks";
-import { weatherSheduler, taskSheduler } from "./shedulers/shedulers";
-const {
-  msgs: { GREETING, HELP },
-} = constants;
+import mongoose from "mongoose";
+import envVariables from "./config/index.js";  
+import { msgs } from "./config/constants.js";
+import * as controllers from "./controllers/index.js";
+import { weatherScene } from "./scenes/weather/weatherScene.js";
+import { mySubsScene, subscribeScene, subMenuScene, unsubscribeScene } from "./scenes/subs/index.js";
+import { recommendMenuScene, attractionsScene, cafeScene, eventScene } from "./scenes/recommend/index.js";
+import { createTaskScene, myTasksScene } from "./scenes/tasks/index.js";
+import { taskSheduler } from "./shedulers/taskSheduler.js";
+import { weatherSheduler } from "./shedulers/weatherSheduler.js";
+
+const { GREETING, HELP } = msgs;
+const {BOT_TOKEN, DATABASE_URL} = envVariables
 
 const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
-connect(dbURL);
-connection.on("error", (err) => {
+
+mongoose.connect(dbURL)
+mongoose.connection.on("error", (err) => {
   console.error(
     undefined,
     "Error occurred during an attempt to establish connection with the database",
@@ -24,7 +26,7 @@ connection.on("error", (err) => {
   process.exit(1);
 });
 
-connection.on("open", () => {
+mongoose.connection.on("open", () => {
   const bot = new Telegraf(BOT_TOKEN);
   const stage = new Scenes.Stage([
     weatherScene,

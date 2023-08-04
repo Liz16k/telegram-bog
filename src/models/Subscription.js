@@ -14,4 +14,4 @@ const subscriptionSchema = new Schema({
 
 const Subscription = model("Subscription", subscriptionSchema);
 
-export default { Subscription };
+export { Subscription };

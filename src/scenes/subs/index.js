@@ -1,4 +1,4 @@
-export { mySubsScene } from "./mySubsScene";
-export { subMenuScene } from "./subMenuScene";
-export { subscribeScene } from "./subscribeScene";
-export { unsubscribeScene } from "./unsubscribeScene";
+export { mySubsScene } from "./mySubsScene.js";
+export { subMenuScene } from "./subMenuScene.js";
+export { subscribeScene } from "./subscribeScene.js";
+export { unsubscribeScene } from "./unsubscribeScene.js";

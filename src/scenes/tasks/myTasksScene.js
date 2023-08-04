@@ -1,5 +1,5 @@
 import { Scenes } from "telegraf";
-import { fetchTasksListKeyboard, deleteTaskFromDB } from "../../services/taskService";
+import { fetchTasksListKeyboard, deleteTaskFromDB } from "../../services/taskService.js";
 
 const myTasksScene = new Scenes.BaseScene("myTasks");
 

@@ -1,5 +1,5 @@
 import { schedule } from "node-cron";
-import { fetchUsersTasks } from "../services/taskService";
+import { fetchUsersTasks } from "../services/taskService.js";
 
 const createTaskScheduler = ({ ctx, bot, task, userId }) => {
   task ??= ctx.wizard.state;
@@ -41,7 +41,4 @@ const taskSheduler = async (bot) => {
   });
 };
 
-export default {
-  taskSheduler,
-  createTaskScheduler,
-};
+export { taskSheduler, createTaskScheduler };

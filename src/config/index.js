@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-export default {
+const envVariables = {
   BOT_TOKEN: process.env.BOT_TOKEN,
   OPEN_WEATHER_KEY: process.env.OPEN_WEATHER_KEY,
   PEXELS_KEY: process.env.PEXELS_KEY,
@@ -8,3 +8,5 @@ export default {
   GEOAPIFY_KEY: process.env.GEOAPIFY_KEY,
   FOURSQUARE_KEY: process.env.FOURSQUARE_KEY,
 };
+
+export default envVariables;

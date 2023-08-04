@@ -1,6 +1,6 @@
 import { Markup } from "telegraf";
-import { Subscription } from "../models/Subscription";
-import { fetchDBCollection } from "../database";
+import { Subscription } from "../models/Subscription.js";
+import { fetchDBCollection } from "../database.js";
 
 async function fetchSubscriptions(userId = null) {
   try {
@@ -42,4 +42,4 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
   }
 }
 
-export default { fetchSubscriptions, fetchSubsListKeyboard };
+export { fetchSubscriptions, fetchSubsListKeyboard };

@@ -1,5 +1,6 @@
-import { get } from "axios";
-import { GEOAPIFY_KEY, FOURSQUARE_KEY } from "../config";
+import axios from "axios";
+import envVariables from "../config/index.js";
+const { GEOAPIFY_KEY, FOURSQUARE_KEY } = envVariables;
 
 async function cafeSearch(args) {
   const categories = "catering.cafe";
@@ -19,7 +20,7 @@ async function eventsSearch({ lat, lon, city }) {
     };
     city ? (params.near = city) : (params.ll = `${lat},${lon}`);
 
-    const response = await get(
+    const response = await axios.get(
       `https://api.foursquare.com/v3/places/search`,
       {
         headers: {
@@ -46,7 +47,7 @@ async function placeSearch({ lat, lon, categories }) {
       limit: 5,
       lang: "ru",
     };
-    const response = await get("https://api.geoapify.com/v2/places", {
+    const response = await axios.get("https://api.geoapify.com/v2/places", {
       params: options,
     });
     return await response.data.features;
@@ -55,4 +56,4 @@ async function placeSearch({ lat, lon, categories }) {
   }
 }
 
-export default { placeSearch, cafeSearch, attractionsSearch, eventsSearch };
+export { placeSearch, cafeSearch, attractionsSearch, eventsSearch };

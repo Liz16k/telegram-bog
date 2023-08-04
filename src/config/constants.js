@@ -31,4 +31,4 @@ const iconMap = {
   "50n": "🌫️",
 };
 
-export default { msgs, iconMap };
+export { msgs, iconMap };

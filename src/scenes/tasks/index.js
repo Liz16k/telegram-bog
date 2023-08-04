@@ -1,2 +1,2 @@
-export { createTaskScene } from "./createTaskScene";
-export { myTasksScene } from "./myTasksScene";
+export { createTaskScene } from "./createTaskScene.js";
+export { myTasksScene } from "./myTasksScene.js";
