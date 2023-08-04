@@ -1,6 +1,6 @@
+const axios = require("axios");
 const { Scenes, Markup } = require("telegraf");
 const { Subscription } = require("../models/Subscription");
-const axios = require("axios");
 const { getCityNameByCoordinates } = require("../services/weatherService");
 const { OPEN_WEATHER_KEY } = require("../config");
 

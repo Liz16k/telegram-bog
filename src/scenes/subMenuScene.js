@@ -1,6 +1,6 @@
 const { Scenes, Markup } = require("telegraf");
-const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 
+const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 subMenuScene.enter(async (ctx) => {
   return await ctx.replyWithHTML(
     `

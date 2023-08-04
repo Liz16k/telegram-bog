@@ -1,9 +1,9 @@
 const { Scenes, Markup } = require("telegraf");
-const mySubsScene = new Scenes.BaseScene("mySubs");
 const { fetchSubsListKeyboard } = require("../services/subscriptionService");
 const { getWeather } = require("../services/weatherService");
 const { iconMap } = require("../config/constants");
 
+const mySubsScene = new Scenes.BaseScene("mySubs");
 mySubsScene.enter(async (ctx) => {
   try {
     const userId = ctx.from.id;

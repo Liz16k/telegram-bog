@@ -1,6 +1,6 @@
+const { Markup } = require("telegraf");
 const { Subscription } = require("../models/Subscription");
 const { fetchDBCollection } = require("../database");
-const { Markup } = require("telegraf");
 
 async function fetchSubscriptions(userId = null) {
   try {
