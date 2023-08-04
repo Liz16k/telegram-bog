@@ -44,11 +44,14 @@ async function saveTaskToDB(userId, taskData) {
 async function deleteTaskFromDB(userId, taskId) {
   try {
     const tasksDoc = await Tasks.findOne({ userId });
+    console.log("TASKSDOC",taskId, tasksDoc);
     const taskIndex = tasksDoc.tasks.findIndex(
       (task) => task._id.toString() === taskId
     );
     const task = tasksDoc.tasks.splice(taskIndex, 1);
-    deleteTaskSheduler(task[0].shedulerId);
+    console.log("TASKINDEX",taskIndex, task);
+    console.log(task.shedulerId);
+    if (task.shedulerId) deleteTaskSheduler(task[0].shedulerId);
     await tasksDoc.save();
   } catch (error) {
     console.error("Ошибка при удалении задачи:", error.message);
@@ -67,7 +70,7 @@ async function fetchTasksListKeyboard(userId) {
     ...tasks.map((task, i) => [
       Markup.button.callback(
         `${i + 1}. ${task.name} (${task.status}) ❌`,
-        ["delete", i, userId].join("_")
+        ["delete", task._id, userId].join("_")
       ),
     ]),
     [Markup.button.callback("Выйти", "exit")],
