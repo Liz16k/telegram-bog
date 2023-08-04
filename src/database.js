@@ -7,4 +7,4 @@ async function fetchDBCollection(model, options = {}) {
   }
 }
 
-module.exports = { fetchDBCollection };
+export default { fetchDBCollection };

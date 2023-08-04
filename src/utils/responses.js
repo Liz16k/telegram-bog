@@ -8,4 +8,4 @@ const weatherResponse = (weatherData) => {
 
 const errorAPIResponse = (error) => error?.response?.data?.message;
 
-module.exports = { weatherResponse, errorAPIResponse };
+export default { weatherResponse, errorAPIResponse };

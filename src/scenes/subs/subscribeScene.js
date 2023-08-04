@@ -1,8 +1,8 @@
-const axios = require("axios");
-const { Scenes, Markup } = require("telegraf");
-const { Subscription } = require("../models/Subscription");
-const { getCityNameByCoordinates } = require("../services/weatherService");
-const { OPEN_WEATHER_KEY } = require("../config");
+import { get } from "axios";
+import { Scenes, Markup } from "telegraf";
+import { Subscription } from "../models/Subscription";
+import { getCityNameByCoordinates } from "../services/weatherService";
+import { OPEN_WEATHER_KEY } from "../config";
 
 const subscribeScene = new Scenes.BaseScene("subscribe");
 
@@ -67,14 +67,13 @@ async function isValidCityName(name) {
       appid: OPEN_WEATHER_KEY,
       limit: 1,
     };
-    const response = await axios.get(
-      "http://api.openweathermap.org/geo/1.0/direct",
-      { params: options }
-    );
+    const response = await get("http://api.openweathermap.org/geo/1.0/direct", {
+      params: options,
+    });
     return response.data.length;
   } catch (error) {
     console.log(error.message);
   }
 }
 
-module.exports = { subscribeScene };
+export { subscribeScene };

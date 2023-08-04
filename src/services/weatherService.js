@@ -1,5 +1,5 @@
-const axios = require("axios");
-const { OPEN_WEATHER_KEY } = require("../config");
+import { get } from "axios";
+import { OPEN_WEATHER_KEY } from "../config";
 
 async function getWeather({ city, lat, lon }) {
   const options = {
@@ -13,7 +13,7 @@ async function getWeather({ city, lat, lon }) {
   } else {
     options.q = city;
   }
-  const response = await axios.get(
+  const response = await get(
     `https://api.openweathermap.org/data/2.5/weather`,
     { params: options }
   );
@@ -27,11 +27,11 @@ async function getCityNameByCoordinates({ lat, lon }) {
     limit: 5,
     appid: OPEN_WEATHER_KEY,
   };
-  const response = await axios.get(
+  const response = await get(
     "http://api.openweathermap.org/geo/1.0/reverse",
     { params: options }
   );
   return await response.data[0].local_names["ru"];
 }
 
-module.exports = { getWeather, getCityNameByCoordinates };
+export default { getWeather, getCityNameByCoordinates };

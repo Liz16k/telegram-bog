@@ -1,4 +1,4 @@
-const { getImgUrl } = require("../services/imageService");
+import { getImgUrl } from "../services/imageService";
 
 async function handleImageCommand(ctx) {
   const userMsg = await ctx.message.text.split(" ");
@@ -14,4 +14,4 @@ async function handleImageCommand(ctx) {
   }
 }
 
-module.exports = { handleImageCommand };
+export { handleImageCommand };

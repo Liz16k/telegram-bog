@@ -6,4 +6,4 @@ function handleMyTasksCommand(ctx) {
   return ctx.scene.enter("myTasks");
 }
 
-module.exports = { handleTaskCommand, handleMyTasksCommand };
+export { handleTaskCommand, handleMyTasksCommand };

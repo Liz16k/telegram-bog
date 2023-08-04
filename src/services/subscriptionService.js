@@ -1,6 +1,6 @@
-const { Markup } = require("telegraf");
-const { Subscription } = require("../models/Subscription");
-const { fetchDBCollection } = require("../database");
+import { Markup } from "telegraf";
+import { Subscription } from "../models/Subscription";
+import { fetchDBCollection } from "../database";
 
 async function fetchSubscriptions(userId = null) {
   try {
@@ -42,4 +42,4 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
   }
 }
 
-module.exports = { fetchSubscriptions, fetchSubsListKeyboard };
+export default { fetchSubscriptions, fetchSubsListKeyboard };

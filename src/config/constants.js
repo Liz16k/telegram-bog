@@ -31,4 +31,4 @@ const iconMap = {
   "50n": "🌫️",
 };
 
-module.exports = { msgs, iconMap };
+export default { msgs, iconMap };

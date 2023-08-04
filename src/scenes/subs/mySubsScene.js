@@ -1,7 +1,7 @@
-const { Scenes, Markup } = require("telegraf");
-const { fetchSubsListKeyboard } = require("../services/subscriptionService");
-const { getWeather } = require("../services/weatherService");
-const { iconMap } = require("../config/constants");
+import { Scenes, Markup } from "telegraf";
+import { fetchSubsListKeyboard } from "../../services/subscriptionService";
+import { getWeather } from "../../services/weatherService";
+import { iconMap } from "../../config/constants";
 
 const mySubsScene = new Scenes.BaseScene("mySubs");
 mySubsScene.enter(async (ctx) => {
@@ -47,4 +47,4 @@ mySubsScene.on("callback_query", async (ctx) => {
   }
 });
 
-module.exports = { mySubsScene };
+export { mySubsScene };

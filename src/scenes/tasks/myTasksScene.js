@@ -1,8 +1,5 @@
-const { Scenes } = require("telegraf");
-const {
-  fetchTasksListKeyboard,
-  deleteTaskFromDB,
-} = require("../../services/taskService");
+import { Scenes } from "telegraf";
+import { fetchTasksListKeyboard, deleteTaskFromDB } from "../../services/taskService";
 
 const myTasksScene = new Scenes.BaseScene("myTasks");
 
@@ -49,4 +46,4 @@ myTasksScene.on("callback_query", async (ctx) => {
   }
 });
 
-module.exports = { myTasksScene };
+export { myTasksScene };

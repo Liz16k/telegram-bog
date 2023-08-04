@@ -1,5 +1,5 @@
-const { Scenes, Markup } = require("telegraf");
-const { cafeSearch } = require("../../services/recommendService");
+import { Scenes, Markup } from "telegraf";
+import { cafeSearch } from "../../services/recommendService";
 
 const cafeScene = new Scenes.BaseScene("cafe");
 cafeScene.enter(async (ctx) => {
@@ -40,4 +40,4 @@ cafeScene.on("message", async (ctx) => {
   }
 });
 
-module.exports = { cafeScene };
+export { cafeScene };

@@ -1,4 +1,4 @@
-const { Scenes, Markup } = require("telegraf");
+import { Scenes, Markup } from "telegraf";
 const recommendMenuScene = new Scenes.BaseScene("recommendationsMenu");
 
 recommendMenuScene.enter(async (ctx) => {
@@ -27,6 +27,4 @@ recommendMenuScene.action("ATTRACTIONS", (ctx) => {
   return ctx.scene.enter("attractions");
 });
 
-module.exports = {
-  recommendMenuScene,
-};
+export { recommendMenuScene };

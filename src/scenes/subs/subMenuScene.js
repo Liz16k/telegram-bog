@@ -1,4 +1,4 @@
-const { Scenes, Markup } = require("telegraf");
+import { Scenes, Markup } from "telegraf";
 
 const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 subMenuScene.enter(async (ctx) => {
@@ -32,6 +32,4 @@ subMenuScene.action("UNSUBSCRIBE", (ctx) => {
   return ctx.scene.enter("unsubscribe");
 });
 
-module.exports = {
-  subMenuScene,
-};
+export { subMenuScene };

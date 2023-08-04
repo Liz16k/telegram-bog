@@ -1,6 +1,6 @@
-const { Scenes } = require("telegraf");
-const { fetchSubsListKeyboard } = require("../services/subscriptionService");
-const { Subscription } = require("../models/Subscription");
+import { Scenes } from "telegraf";
+import { fetchSubsListKeyboard } from "../services/subscriptionService";
+import { Subscription } from "../models/Subscription";
 
 const unsubscribeScene = new Scenes.BaseScene("unsubscribe");
 const backBtn = { text: "Выйти", data: "exit" };
@@ -51,4 +51,4 @@ unsubscribeScene.on("callback_query", async (ctx) => {
   ctx.answerCbQuery("Подписка успешно удалена");
 });
 
-module.exports = { unsubscribeScene };
+export { unsubscribeScene };

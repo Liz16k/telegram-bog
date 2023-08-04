@@ -1,17 +1,17 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const locationSchema = new mongoose.Schema({
+const locationSchema = new Schema({
   location: {
     city: { type: String, required: true },
     lat: { type: Number, required: false },
     lon: { type: Number, required: false },
   },
 });
-const subscriptionSchema = new mongoose.Schema({
+const subscriptionSchema = new Schema({
   userId: { type: Number, required: true },
   subscriptions: [locationSchema],
 });
 
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
+const Subscription = model("Subscription", subscriptionSchema);
 
-module.exports = { Subscription };
+export default { Subscription };

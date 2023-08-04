@@ -1,10 +1,10 @@
-const axios = require("axios");
-const { PEXELS_KEY } = require("../config");
-const { getRandomNum } = require("../utils/getRandomNum");
+import { get } from "axios";
+import { PEXELS_KEY } from "../config";
+import { getRandomNum } from "../utils/getRandomNum";
 
 async function getImgUrl(query) {
   try {
-    const response = await axios.get(`https://api.pexels.com/v1/search`, {
+    const response = await get(`https://api.pexels.com/v1/search`, {
       headers: { Authorization: PEXELS_KEY },
       params: {
         query,
@@ -18,4 +18,4 @@ async function getImgUrl(query) {
   }
 }
 
-module.exports = { getImgUrl };
+export default { getImgUrl };

@@ -1,6 +1,6 @@
-const { Scenes, Markup } = require("telegraf");
-const { saveTaskToDB } = require("../../services/taskService");
-const { createTaskScheduler } = require("../../utils/shedulers");
+import { Scenes, Markup } from "telegraf";
+import { saveTaskToDB } from "../../services/taskService";
+import { createTaskScheduler } from "../../shedulers/shedulers";
 
 const createTaskScene = new Scenes.WizardScene(
   "createTask",
@@ -70,4 +70,4 @@ const createTaskScene = new Scenes.WizardScene(
   }
 );
 
-module.exports = { createTaskScene };
+export { createTaskScene };

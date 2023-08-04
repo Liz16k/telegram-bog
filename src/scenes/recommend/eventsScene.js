@@ -1,5 +1,5 @@
-const { Scenes, Markup } = require("telegraf");
-const { eventsSearch } = require("../../services/recommendService");
+import { Scenes, Markup } from "telegraf";
+import { eventsSearch } from "../../services/recommendService";
 
 const eventScene = new Scenes.BaseScene("events");
 eventScene.enter(async (ctx) => {
@@ -50,4 +50,4 @@ eventScene.on("message", async (ctx) => {
   }
 });
 
-module.exports = { eventScene };
+export { eventScene };

@@ -1,7 +1,7 @@
-const { Scenes, Markup } = require("telegraf");
-const { getWeather } = require("../services/weatherService");
-const { getCityNameByCoordinates } = require("../services/weatherService");
-const { iconMap } = require("../config/constants");
+import { Scenes, Markup } from "telegraf";
+import { getWeather } from "../../services/weatherService";
+import { getCityNameByCoordinates } from "../../services/weatherService";
+import { iconMap } from "../../config/constants";
 
 const weatherScene = new Scenes.BaseScene("weather");
 
@@ -53,4 +53,4 @@ weatherScene.on("message", async (ctx) => {
   ctx.scene.leave();
 });
 
-module.exports = { weatherScene };
+export default { weatherScene };
