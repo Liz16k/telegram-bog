@@ -14,7 +14,6 @@ subMenuScene.enter(async (ctx) => {
         Markup.button.callback("👀 Оформить подписку", "SUBSCRIBE"),
         Markup.button.callback("❌ Отменить подписку", "UNSUBSCRIBE"),
       ],
-      [Markup.button.locationRequest("Отправить местоположение", "location")],
     ])
       .resize()
       .oneTime()

@@ -14,7 +14,6 @@ eventScene.enter(async (ctx) => {
 
 eventScene.on("message", async (ctx) => {
   try {
-    Markup.removeKeyboard();
     let params;
     if (ctx.message.location) {
       const { latitude: lat, longitude: lon } = ctx.message.location;
@@ -26,7 +25,7 @@ eventScene.on("message", async (ctx) => {
     const { results } = await eventsSearch(params);
 
     if (results.length) {
-      await ctx.reply(msgs.CAPTIONS.EVENTS);
+      await ctx.reply(msgs.CAPTIONS.EVENTS, Markup.removeKeyboard());
 
       for (const result of results) {
         const {
@@ -36,7 +35,7 @@ eventScene.on("message", async (ctx) => {
         await ctx.replyWithHTML(` 🎊 <b>${name}</b>\n${formatted_address}`);
       }
     } else {
-      ctx.reply(msgs.NOTFOUND.EVENTS);
+      ctx.reply(msgs.NOTFOUND.EVENTS, Markup.removeKeyboard());
     }
 
     return await ctx.scene.leave();

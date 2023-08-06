@@ -18,7 +18,7 @@ cafeScene.on("message", async (ctx) => {
       const { latitude: lat, longitude: lon } = ctx.message.location;
       const data = await cafeSearch({ lat, lon });
 
-      ctx.reply(msgs.WAIT.MAIN);
+      ctx.reply(msgs.WAIT.MAIN, Markup.removeKeyboard());
       ctx.reply(msgs.CAPTIONS.CAFE);
 
       for (const place of data) {

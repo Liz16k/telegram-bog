@@ -34,7 +34,7 @@ async function getCityNameByCoordinates({ lat, lon }) {
       params: options,
     }
   );
-  return await response.data[0].local_names["ru"];
+  return await response.data[0].local_names["ru"] ?? response.data[0].name;
 }
 
 export { getWeather, getCityNameByCoordinates };

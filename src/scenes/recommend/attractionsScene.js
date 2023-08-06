@@ -19,8 +19,8 @@ attractionsScene.on("message", async (ctx) => {
       const { latitude: lat, longitude: lon } = ctx.message.location;
       const data = await attractionsSearch({ lat, lon });
 
-      await ctx.reply(msgs.WAIT.MAIN);
-      await ctx.reply(msgs.CAPTION.ATTRACTIONS);
+      await ctx.reply(msgs.WAIT.MAIN, Markup.removeKeyboard());
+      await ctx.reply(msgs.CAPTIONS.ATTRACTIONS);
 
       for (const [_, place] of Object.entries(data)) {
         const { name, formatted, distance } = await place.properties;

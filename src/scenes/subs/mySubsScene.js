@@ -24,6 +24,7 @@ mySubsScene.on("callback_query", async (ctx) => {
     const callbackData = JSON.parse(ctx.callbackQuery.data);
 
     if (callbackData.type === "exit") {
+      ctx.answerCbQuery(msgs.EXIT.SUBS);
       return await ctx.scene.leave();
     }
 
@@ -48,6 +49,8 @@ mySubsScene.on("callback_query", async (ctx) => {
       Markup.removeKeyboard()
     );
   } catch (error) {
+    ctx.reply(msgs.ERROR.WEATHER);
+    ctx.answerCbQuery(msgs.ERROR.WEATHER_HINT);
     console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });

@@ -35,6 +35,7 @@ subscribeScene.on("message", async (ctx) => {
       ctx.reply(msgs.NOTFOUND.CITY);
       return await ctx.scene.leave();
     } else {
+
       if (!bdUserSub) {
         const newSub = new Subscription({
           userId,
@@ -51,11 +52,11 @@ subscribeScene.on("message", async (ctx) => {
         return ctx.reply(msgs.SIGNED);
       }
       Markup.removeKeyboard();
-      ctx.reply(msgs.SUCCESS.WEATHER);
+      ctx.reply(msgs.SUCCESS.WEATHER, Markup.removeKeyboard());
       return await ctx.scene.leave();
     }
   } catch (error) {
-    ctx.reply('Не удалось подписаться на уведомление о погоде')
+    ctx.reply("Не удалось подписаться на уведомление о погоде");
     console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
