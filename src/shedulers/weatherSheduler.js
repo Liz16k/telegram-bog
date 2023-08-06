@@ -1,7 +1,7 @@
 import { schedule } from "node-cron";
 import { fetchSubscriptions } from "#services/subscriptionService.js";
 import { getWeather } from "#services/weatherService.js";
-import { iconMap } from "#config/constants.js";
+import { iconMap, logMsgs } from "#config/constants.js";
 
 const weatherSheduler = (bot) => {
   schedule(
@@ -47,19 +47,16 @@ const weatherNotificate = async (bot) => {
         bot.telegram
           .sendMessage(userId, messageText)
           .then(() => {
-            console.log(`Сообщение успешно отправлено на userId: ${userId}`);
+            console.log(logMsgs.SUCCESS.MSG, "на", userId);
             [];
           })
           .catch((error) => {
-            console.error(
-              `Не удалось отправить сообщение на userId: ${userId}`,
-              error.message
-            );
+            console.error(logMsgs.ERROR.MSG, "на", userId, error.message);
           });
       });
     });
   } catch (error) {
-    console.log(error.message);
+    console.error(logMsgs.ERROR.SHEDULER, error.message);
   }
 };
 

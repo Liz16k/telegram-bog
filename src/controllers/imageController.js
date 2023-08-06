@@ -1,16 +1,16 @@
 import { getImgUrl } from "#services/imageService.js";
+import { logMsgs, msgs } from "#config/constants";
 
 async function handleImageCommand(ctx) {
-  const userMsg = await ctx.message.text.split(" ");
-  const imgQuery = userMsg[0].slice(1);
-  ctx.reply('Подождите. Загружаю изображение...')
   try {
+    await ctx.reply(msgs.WAIT.IMG);
+    const userMsg = await ctx.message.text.split(" ");
+    const imgQuery = userMsg[0].slice(1);
     const imgUrl = await getImgUrl(imgQuery);
-    imgUrl
-      ? ctx.sendPhoto(imgUrl)
-      : ctx.reply("Не удалось получить изображение. Попробуйте еще раз.");
+    await ctx.sendPhoto(imgUrl);
   } catch (error) {
-    ctx.reply("API response error \n" + error.response);
+    ctx.reply(msgs.ERROR.IMG);
+    console.error(logMsgs.ERROR.HANDLE.IMG, error.message);
   }
 }
 

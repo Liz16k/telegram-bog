@@ -1,6 +1,7 @@
 import axios from "axios";
 import envVariables from "#config/index.js";
 import { getRandomNum } from "#utils/getRandomNum.js";
+import { msgs, logMsgs } from "#config/constants";
 
 const { PEXELS_KEY } = envVariables;
 async function getImgUrl(query) {
@@ -15,7 +16,8 @@ async function getImgUrl(query) {
     });
     return response.data.photos[0].src.original;
   } catch (error) {
-    ctx.reply("Не удалось получить изображение. Попробуйте еще раз.");
+    ctx.reply(msgs.ERROR.IMG);
+    console.error(logMsgs.ERROR.FETCH, error.message);
   }
 }
 

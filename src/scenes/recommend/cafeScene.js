@@ -1,20 +1,15 @@
 import { Scenes, Markup } from "telegraf";
 import { cafeSearch } from "#services/recommendService.js";
+import { msgs, logMsgs } from "#config/constants.js";
 
 const cafeScene = new Scenes.BaseScene("cafe");
 cafeScene.enter(async (ctx) => {
-  try {
-    ctx.reply(
-      "Поделитесь своим местоположением",
-      Markup.keyboard([
-        Markup.button.locationRequest("Отправить местоположение"),
-      ])
-        .resize()
-        .oneTime()
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
+  ctx.reply(
+    msgs.GEO,
+    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+      .resize()
+      .oneTime()
+  );
 });
 
 cafeScene.on("message", async (ctx) => {
@@ -23,8 +18,8 @@ cafeScene.on("message", async (ctx) => {
       const { latitude: lat, longitude: lon } = ctx.message.location;
       const data = await cafeSearch({ lat, lon });
 
-      ctx.reply("Данные загружаются...");
-      ctx.reply("Ближайшие кафе:");
+      ctx.reply(msgs.WAIT.MAIN);
+      ctx.reply(msgs.CAPTIONS.CAFE);
 
       for (const place of data) {
         const { formatted, distance } = place.properties;
@@ -33,10 +28,10 @@ cafeScene.on("message", async (ctx) => {
 
       return await ctx.scene.leave();
     } else {
-      ctx.reply("Отправьте свое местоположение");
+      ctx.reply(msgs.GEO);
     }
   } catch (error) {
-    console.log(error.message);
+    console.log(logMsgs.ERROR.SCENE, error.message);
   }
 });
 

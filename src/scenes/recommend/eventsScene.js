@@ -1,20 +1,15 @@
 import { Scenes, Markup } from "telegraf";
 import { eventsSearch } from "#services/recommendService.js";
+import { msgs, logMsgs } from "#config/constants.js";
 
 const eventScene = new Scenes.BaseScene("events");
 eventScene.enter(async (ctx) => {
-  try {
-    ctx.reply(
-      "Введите населенный пункт, или поделитесь своим местоположением",
-      Markup.keyboard([
-        Markup.button.locationRequest("Отправить местоположение"),
-      ])
-        .resize()
-        .oneTime()
-    );
-  } catch (error) {
-    console.log(error);
-  }
+  ctx.reply(
+    msgs.LOCATION,
+    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+      .resize()
+      .oneTime()
+  );
 });
 
 eventScene.on("message", async (ctx) => {
@@ -31,7 +26,7 @@ eventScene.on("message", async (ctx) => {
     const { results } = await eventsSearch(params);
 
     if (results.length) {
-      await ctx.reply("Ближайшие события:");
+      await ctx.reply(msgs.CAPTIONS.EVENTS);
 
       for (const result of results) {
         const {
@@ -41,12 +36,13 @@ eventScene.on("message", async (ctx) => {
         await ctx.replyWithHTML(` 🎊 <b>${name}</b>\n${formatted_address}`);
       }
     } else {
-      ctx.reply("Событий не найдено.");
+      ctx.reply(msgs.NOTFOUND.EVENTS);
     }
 
     return await ctx.scene.leave();
   } catch (error) {
-    console.log(error.message);
+    ctx.reply("");
+    console.log(logMsgs.SCENE, error.message);
   }
 });
 

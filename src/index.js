@@ -2,24 +2,20 @@ import { Telegraf, Scenes, session } from "telegraf";
 import rateLimit from "telegraf-ratelimit";
 import mongoose from "mongoose";
 import envVariables from "#config/index.js";
-import { msgs } from "#config/constants.js";
+import { msgs, logMsgs } from "#config/constants.js";
 import * as controllers from "#controllers/index.js";
 import * as scenes from "#scenes/index.js";
 import { taskSheduler } from "#shedulers/taskSheduler.js";
 import { weatherSheduler } from "#shedulers/weatherSheduler.js";
 
-const { GREETING, HELP } = msgs;
+const { GREETING, HELP, ERROR } = msgs;
 const { BOT_TOKEN, DATABASE_URL } = envVariables;
 
 const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 
 mongoose.connect(dbURL);
 mongoose.connection.on("error", (err) => {
-  console.error(
-    undefined,
-    "Error occurred during an attempt to establish connection with the database",
-    err
-  );
+  console.error(logMsgs.ERROR.DB,CONNECT, err);
   process.exit(1);
 });
 
@@ -30,7 +26,7 @@ mongoose.connection.on("open", () => {
   const limitConfig = {
     window: 1000,
     limit: 1,
-    onLimitExceeded: (ctx) => ctx.reply("Rate limit exceeded"),
+    onLimitExceeded: (ctx) => ctx.reply(ERROR.RATELIMIT),
   };
 
   bot.use(rateLimit(limitConfig));

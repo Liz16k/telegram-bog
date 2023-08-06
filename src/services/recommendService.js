@@ -1,5 +1,6 @@
 import axios from "axios";
 import envVariables from "#config/index.js";
+import { logMsgs } from "#config/constants";
 const { GEOAPIFY_KEY, FOURSQUARE_KEY } = envVariables;
 
 async function cafeSearch(args) {
@@ -32,7 +33,7 @@ async function eventsSearch({ lat, lon, city }) {
     );
     return response.data;
   } catch (error) {
-    console.log(error.message);
+    console.error(logMsgs.ERROR.FETCH, error.message);
   }
 }
 
@@ -52,7 +53,7 @@ async function placeSearch({ lat, lon, categories }) {
     });
     return await response.data.features;
   } catch (error) {
-    console.log(error.message);
+    console.log(logMsgs.ERROR.FETCH, error.message);
   }
 }
 

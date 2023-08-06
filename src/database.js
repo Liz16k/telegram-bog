@@ -1,9 +1,11 @@
+import { logMsgs } from "#config/constants";
+
 async function fetchDBCollection(model, options = {}) {
   try {
     const response = await model.find(options);
     return response;
   } catch (error) {
-    console.error("Не удалось получить коллекцию", error);
+    console.error(logMsgs.ERROR.DB.FETCH, error);
   }
 }
 

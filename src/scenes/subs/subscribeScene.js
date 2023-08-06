@@ -3,13 +3,14 @@ import { Scenes, Markup } from "telegraf";
 import { Subscription } from "#models/Subscription.js";
 import { getCityNameByCoordinates } from "#services/weatherService.js";
 import envVariables from "#config/index.js";
+import { msgs, logMsgs } from "#config/constants.js";
 const { OPEN_WEATHER_KEY } = envVariables;
 
 const subscribeScene = new Scenes.BaseScene("subscribe");
 
 subscribeScene.enter(async (ctx) => {
   return await ctx.reply(
-    "Введите населенный пункт или отправьте свое местоположение",
+    msgs.LOCATION,
     Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
       .resize()
       .oneTime()
@@ -29,10 +30,9 @@ subscribeScene.on("message", async (ctx) => {
     } else {
       params = { city: ctx.message.text };
     }
-    console.log('PARAMs',params);
 
     if (!ctx.message.location && !(await isValidCityName(ctx.message.text))) {
-      ctx.reply("Населенный пункт не найден.");
+      ctx.reply(msgs.NOTFOUND.CITY);
       return await ctx.scene.leave();
     } else {
       if (!bdUserSub) {
@@ -48,16 +48,14 @@ subscribeScene.on("message", async (ctx) => {
         ];
         bdUserSub.save();
       } else {
-        return ctx.reply(
-          "Вы уже имеете подписку на введенный населенный пункт."
-        );
+        return ctx.reply(msgs.SIGNED);
       }
       Markup.removeKeyboard();
-      ctx.reply("Вы успешно подписаны на обновление о погоде.");
+      ctx.reply(msgs.SUCCESS.WEATHER);
       return await ctx.scene.leave();
     }
   } catch (error) {
-    console.log(error.message);
+    console.log(logMsgs.ERROR.SCENE, error.message);
   }
 });
 
@@ -81,7 +79,7 @@ async function isValidCityName(name) {
     );
     return response.data.length;
   } catch (error) {
-    console.log(error.message);
+    console.log(logMsgs.ERROR.FETCH, error.message);
   }
 }
 

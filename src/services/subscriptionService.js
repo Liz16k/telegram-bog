@@ -1,6 +1,7 @@
 import { Markup } from "telegraf";
 import { Subscription } from "#models/Subscription.js";
 import { fetchDBCollection } from "../database.js";
+import { logMsgs } from "#config/constants.js";
 
 async function fetchSubscriptions(userId = null) {
   try {
@@ -10,7 +11,7 @@ async function fetchSubscriptions(userId = null) {
     );
     return response;
   } catch (error) {
-    console.log(error.message);
+    console.log(logMsgs.ERROR.FETCH, error.message);
   }
 }
 
@@ -19,16 +20,17 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
     const userSubscriptionDoc = await fetchSubscriptions(userId);
     let keyboard = Markup.inlineKeyboard([
       ...userSubscriptionDoc[0].subscriptions.map((sub) => {
-        const {lat, lon, city} = sub.location
+        const { lat, lon, city } = sub.location;
         return [
-        Markup.button.callback(
-          `${sub.location.city} ${btnChar}`,
-          JSON.stringify({
-            params: lat ? `${lat}&${lon}` : city,
-            userId: userId,
-          })
-        ),
-      ]}),
+          Markup.button.callback(
+            `${sub.location.city} ${btnChar}`,
+            JSON.stringify({
+              params: lat ? `${lat}&${lon}` : city,
+              userId: userId,
+            })
+          ),
+        ];
+      }),
       [
         Markup.button.callback(
           extraBtn.text,
@@ -40,7 +42,7 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
       .oneTime();
     return keyboard;
   } catch (error) {
-    console.log("fetchSubsListKeyboard ", error.message);
+    console.log(logMsgs.ERROR.KEYBOARD, error.message);
   }
 }
 
