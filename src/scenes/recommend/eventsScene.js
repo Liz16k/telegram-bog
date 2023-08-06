@@ -41,7 +41,7 @@ eventScene.on("message", async (ctx) => {
 
     return await ctx.scene.leave();
   } catch (error) {
-    ctx.reply("");
+    ctx.reply(msgs.ERROR.RECOMMENDATION);
     console.error(logMsgs.SCENE, error.message);
   }
 });

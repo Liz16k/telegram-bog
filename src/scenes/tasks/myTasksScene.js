@@ -1,4 +1,5 @@
 import { Scenes } from "telegraf";
+import { logMsgs, msgs } from "#config/constants.js";
 import {
   fetchTasksListKeyboard,
   deleteTaskFromDB,
@@ -10,7 +11,7 @@ myTasksScene.enter(async (ctx) => {
   const userId = ctx.message.from.id;
   const chatId = ctx.chat.id;
   const replyMsg = await ctx.reply(
-    "Ваши задачи: ",
+    msgs.CAPTIONS.TASKS,
     await fetchTasksListKeyboard(userId)
   );
   const messageId = replyMsg?.message_id;
@@ -21,30 +22,30 @@ myTasksScene.enter(async (ctx) => {
 });
 
 myTasksScene.on("callback_query", async (ctx) => {
-  const [action, taskId, userId] = await ctx.callbackQuery.data.split("_");
-  const chatId = await ctx.session?.taskListMsg?.chatId;
-  const messageId = await ctx.session?.taskListMsg?.messageId;
+  try {
+    const [action, taskId, userId] = await ctx.callbackQuery.data.split("_");
+    const chatId = await ctx.session?.taskListMsg?.chatId;
+    const messageId = await ctx.session?.taskListMsg?.messageId;
 
-  if (action === "delete") {
-    await deleteTaskFromDB(userId, taskId);
+    if (action === "delete") {
+      await deleteTaskFromDB(userId, taskId);
 
-    await ctx.telegram.editMessageText(
-      chatId,
-      messageId,
-      undefined,
-      "Список обновлен",
-      await fetchTasksListKeyboard(userId)
-    );
+      await ctx.telegram.editMessageText(
+        chatId,
+        messageId,
+        undefined,
+        "Список обновлен",
+        await fetchTasksListKeyboard(userId)
+      );
 
-    await ctx.answerCbQuery("Задача удалена");
-  } else if (action === "exit") {
-    await ctx.telegram.editMessageText(
-      chatId,
-      messageId,
-      undefined,
-      "Список обновлен"
-    );
-    return await ctx.scene.leave();
+      await ctx.answerCbQuery(msgs.SUCCESS.TASK_DELETE);
+    } else if (action === "exit") {
+      await ctx.deleteMessage(messageId);
+      return await ctx.scene.leave();
+    }
+  } catch (error) {
+    ctx.reply(msgs.ERROR.TASK_DELETE);
+    console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
 

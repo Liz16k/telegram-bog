@@ -55,6 +55,7 @@ subscribeScene.on("message", async (ctx) => {
       return await ctx.scene.leave();
     }
   } catch (error) {
+    ctx.reply('Не удалось подписаться на уведомление о погоде')
     console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });

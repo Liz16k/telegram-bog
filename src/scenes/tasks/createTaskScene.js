@@ -36,7 +36,7 @@ const createTaskScene = new Scenes.WizardScene(
     } else {
       ctx.wizard.state.reminder = false;
       await saveTaskToDB(userId, ctx.wizard.state);
-      ctx.reply("Задача успешно создана!");
+      ctx.reply(msgs.SUCCESS.TASK_CREATE);
       return ctx.scene.leave();
     }
   },
@@ -64,8 +64,8 @@ const createTaskScene = new Scenes.WizardScene(
 
     ctx.wizard.state.shedulerId = createTaskScheduler({ ctx }).options.name;
     await saveTaskToDB(userId, ctx.wizard.state);
-    ctx.reply("Задача успешно создана!");
 
+    ctx.reply(msgs.SUCCESS.TASK_CREATE);
     return ctx.scene.leave();
   }
 );
