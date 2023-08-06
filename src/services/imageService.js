@@ -1,6 +1,6 @@
 import axios from "axios";
-import envVariables from "../config/index.js";
-import { getRandomNum } from "../utils/getRandomNum.js";
+import envVariables from "#config/index.js";
+import { getRandomNum } from "#utils/getRandomNum.js";
 
 const { PEXELS_KEY } = envVariables;
 async function getImgUrl(query) {

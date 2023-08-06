@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Scenes, Markup } from "telegraf";
-import { Subscription } from "../../models/Subscription.js";
-import { getCityNameByCoordinates } from "../../services/weatherService.js";
-import envVariables from "../../config/index.js";
+import { Subscription } from "#models/Subscription.js";
+import { getCityNameByCoordinates } from "#services/weatherService.js";
+import envVariables from "#config/index.js";
 const { OPEN_WEATHER_KEY } = envVariables;
 
 const subscribeScene = new Scenes.BaseScene("subscribe");

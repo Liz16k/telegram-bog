@@ -1,6 +1,6 @@
 import { Scenes } from "telegraf";
-import { fetchSubsListKeyboard } from "../../services/subscriptionService.js";
-import { Subscription } from "../../models/Subscription.js";
+import { fetchSubsListKeyboard } from "#services/subscriptionService.js";
+import { Subscription } from "#models/Subscription.js";
 
 const unsubscribeScene = new Scenes.BaseScene("unsubscribe");
 const backBtn = { text: "Выйти", data: "exit" };

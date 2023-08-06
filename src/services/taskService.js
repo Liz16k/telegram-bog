@@ -1,6 +1,6 @@
 import { getTasks } from "node-cron";
 import { Markup } from "telegraf";
-import { Tasks } from "../models/Tasks.js";
+import { Tasks } from "#models/Tasks.js";
 
 async function fetchUserTasks(userId) {
   try {

@@ -1,4 +1,4 @@
-import { getImgUrl } from "../services/imageService.js";
+import { getImgUrl } from "#services/imageService.js";
 
 async function handleImageCommand(ctx) {
   const userMsg = await ctx.message.text.split(" ");
