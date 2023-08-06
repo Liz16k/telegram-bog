@@ -11,10 +11,10 @@ async function getImgUrl(query) {
       params: {
         query,
         per_page: 1,
-        page: getRandomNum(100),
+        page: getRandomNum(1000),
       },
     });
-    return response.data.photos[0].src.original;
+    return await response.data.photos[0].src.large2x;
   } catch (error) {
     ctx.reply(msgs.ERROR.IMG);
     console.error(logMsgs.ERROR.FETCH, error.message);
