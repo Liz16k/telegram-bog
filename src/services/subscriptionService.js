@@ -1,5 +1,5 @@
 import { Markup } from "telegraf";
-import { Subscription } from "../models/Subscription.js";
+import { Subscription } from "#models/Subscription.js";
 import { fetchDBCollection } from "../database.js";
 
 async function fetchSubscriptions(userId = null) {

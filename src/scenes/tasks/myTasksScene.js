@@ -1,5 +1,8 @@
 import { Scenes } from "telegraf";
-import { fetchTasksListKeyboard, deleteTaskFromDB } from "../../services/taskService.js";
+import {
+  fetchTasksListKeyboard,
+  deleteTaskFromDB,
+} from "#services/taskService.js";
 
 const myTasksScene = new Scenes.BaseScene("myTasks");
 
@@ -35,7 +38,6 @@ myTasksScene.on("callback_query", async (ctx) => {
 
     await ctx.answerCbQuery("Задача удалена");
   } else if (action === "exit") {
-
     await ctx.telegram.editMessageText(
       chatId,
       messageId,

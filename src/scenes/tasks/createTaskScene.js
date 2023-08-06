@@ -1,6 +1,6 @@
 import { Scenes, Markup } from "telegraf";
-import { saveTaskToDB } from "../../services/taskService.js";
-import { createTaskScheduler } from "../../shedulers/taskSheduler.js";
+import { saveTaskToDB } from "#services/taskService.js";
+import { createTaskScheduler } from "#shedulers/taskSheduler.js";
 
 const createTaskScene = new Scenes.WizardScene(
   "createTask",

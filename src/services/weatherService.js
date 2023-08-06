@@ -1,5 +1,5 @@
 import axios from "axios";
-import envVariables from "../config/index.js";
+import envVariables from "#config/index.js";
 const { OPEN_WEATHER_KEY } = envVariables;
 
 async function getWeather({ city, lat, lon }) {
@@ -28,9 +28,12 @@ async function getCityNameByCoordinates({ lat, lon }) {
     limit: 5,
     appid: OPEN_WEATHER_KEY,
   };
-  const response = await axios.get("http://api.openweathermap.org/geo/1.0/reverse", {
-    params: options,
-  });
+  const response = await axios.get(
+    "http://api.openweathermap.org/geo/1.0/reverse",
+    {
+      params: options,
+    }
+  );
   return await response.data[0].local_names["ru"];
 }
 

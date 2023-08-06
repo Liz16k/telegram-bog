@@ -1,5 +1,5 @@
 import axios from "axios";
-import envVariables from "../config/index.js";
+import envVariables from "#config/index.js";
 const { GEOAPIFY_KEY, FOURSQUARE_KEY } = envVariables;
 
 async function cafeSearch(args) {
