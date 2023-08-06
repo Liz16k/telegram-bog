@@ -38,7 +38,7 @@ async function saveTaskToDB(userId, taskData) {
       await newTasksDoc.save();
     }
   } catch (error) {
-    console.log(logMsgs.ERROR.DB.FETCH, error.message);
+    console.error(logMsgs.ERROR.DB.FETCH, error.message);
   }
 }
 

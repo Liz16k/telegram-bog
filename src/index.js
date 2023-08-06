@@ -15,7 +15,7 @@ const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 
 mongoose.connect(dbURL);
 mongoose.connection.on("error", (err) => {
-  console.error(logMsgs.ERROR.DB,CONNECT, err);
+  console.error(logMsgs.ERROR.DB, CONNECT, err);
   process.exit(1);
 });
 
@@ -41,8 +41,8 @@ mongoose.connection.on("open", () => {
   bot.command("weather", controllers.handleWeatherCommand);
   bot.command("subscription", controllers.handleSubCommand);
   bot.command("recommendation", controllers.handleReccomendCommand);
-  bot.command("createTask", controllers.handleTaskCommand);
-  bot.command("myTasks", controllers.handleMyTasksCommand);
+  bot.command("create_task", controllers.handleTaskCommand);
+  bot.command("my_tasks", controllers.handleMyTasksCommand);
 
   bot.launch();
 

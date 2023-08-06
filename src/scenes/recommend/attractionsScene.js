@@ -33,6 +33,7 @@ attractionsScene.on("message", async (ctx) => {
       ctx.reply(msgs.GEO);
     }
   } catch (error) {
+    ctx.reply(msgs.ERROR.RECOMMENDATION);
     console.error(logMsgs.SCENE, error.message);
   }
 });
