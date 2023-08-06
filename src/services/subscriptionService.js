@@ -11,7 +11,7 @@ async function fetchSubscriptions(userId = null) {
     );
     return response;
   } catch (error) {
-    console.log(logMsgs.ERROR.FETCH, error.message);
+    console.error(logMsgs.ERROR.FETCH, error.message);
   }
 }
 
@@ -42,7 +42,7 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
       .oneTime();
     return keyboard;
   } catch (error) {
-    console.log(logMsgs.ERROR.KEYBOARD, error.message);
+    console.error(logMsgs.ERROR.KEYBOARD, error.message);
   }
 }
 

@@ -47,7 +47,7 @@ const weatherNotificate = async (bot) => {
         bot.telegram
           .sendMessage(userId, messageText)
           .then(() => {
-            console.log(logMsgs.SUCCESS.MSG, "на", userId);
+            console.error(logMsgs.SUCCESS.MSG, "на", userId);
             [];
           })
           .catch((error) => {

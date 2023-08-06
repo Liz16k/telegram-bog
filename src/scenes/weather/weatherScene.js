@@ -3,7 +3,7 @@ import {
   getWeather,
   getCityNameByCoordinates,
 } from "#services/weatherService.js";
-import { iconMap, msgs } from "#config/constants.js";
+import { iconMap, msgs, logMsgs } from "#config/constants.js";
 
 const weatherScene = new Scenes.BaseScene("weather");
 

@@ -53,7 +53,7 @@ async function placeSearch({ lat, lon, categories }) {
     });
     return await response.data.features;
   } catch (error) {
-    console.log(logMsgs.ERROR.FETCH, error.message);
+    console.error(logMsgs.ERROR.FETCH, error.message);
   }
 }
 

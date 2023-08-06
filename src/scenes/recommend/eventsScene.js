@@ -42,7 +42,7 @@ eventScene.on("message", async (ctx) => {
     return await ctx.scene.leave();
   } catch (error) {
     ctx.reply("");
-    console.log(logMsgs.SCENE, error.message);
+    console.error(logMsgs.SCENE, error.message);
   }
 });
 

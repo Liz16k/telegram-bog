@@ -31,7 +31,7 @@ cafeScene.on("message", async (ctx) => {
       ctx.reply(msgs.GEO);
     }
   } catch (error) {
-    console.log(logMsgs.ERROR.SCENE, error.message);
+    console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
 

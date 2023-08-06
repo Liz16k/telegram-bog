@@ -48,7 +48,7 @@ mySubsScene.on("callback_query", async (ctx) => {
       Markup.removeKeyboard()
     );
   } catch (error) {
-    console.log(logMsgs.ERROR.SCENE, error.message);
+    console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
 

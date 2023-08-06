@@ -14,7 +14,7 @@ const createTaskScheduler = ({ ctx, bot, task, userId }) => {
         bot.telegram
           .sendMessage(userId, `${msgs.NOTIFY} ${name}`)
           .then(() => {
-            console.log(logMsgs.SUCCESS.MSG, "на", userId);
+            console.error(logMsgs.SUCCESS.MSG, "на", userId);
           })
           .catch((error) => {
             console.error(logMsgs.ERROR.MSG, "на", userId, error.message);

@@ -55,7 +55,7 @@ subscribeScene.on("message", async (ctx) => {
       return await ctx.scene.leave();
     }
   } catch (error) {
-    console.log(logMsgs.ERROR.SCENE, error.message);
+    console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
 
@@ -79,7 +79,7 @@ async function isValidCityName(name) {
     );
     return response.data.length;
   } catch (error) {
-    console.log(logMsgs.ERROR.FETCH, error.message);
+    console.error(logMsgs.ERROR.FETCH, error.message);
   }
 }
 
