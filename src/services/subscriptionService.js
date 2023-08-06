@@ -18,15 +18,17 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
   try {
     const userSubscriptionDoc = await fetchSubscriptions(userId);
     let keyboard = Markup.inlineKeyboard([
-      ...userSubscriptionDoc[0].subscriptions.map((sub) => [
+      ...userSubscriptionDoc[0].subscriptions.map((sub) => {
+        const {lat, lon, city} = sub.location
+        return [
         Markup.button.callback(
           `${sub.location.city} ${btnChar}`,
           JSON.stringify({
-            city: sub.location.city,
+            params: lat ? `${lat}&${lon}` : city,
             userId: userId,
           })
         ),
-      ]),
+      ]}),
       [
         Markup.button.callback(
           extraBtn.text,

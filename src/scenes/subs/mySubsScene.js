@@ -2,17 +2,21 @@ import { Scenes, Markup } from "telegraf";
 import { fetchSubsListKeyboard } from "#services/subscriptionService.js";
 import { getWeather } from "#services/weatherService.js";
 import { iconMap } from "#config/constants.js";
+import { Subscription } from "#models/Subscription.js";
 
 const mySubsScene = new Scenes.BaseScene("mySubs");
 mySubsScene.enter(async (ctx) => {
   try {
     const userId = ctx.from.id;
+    const bdUserSub = await Subscription.findOne({ userId });
+    if (!bdUserSub || bdUserSub.subscriptions.length === 0) {
+      await ctx.reply("У вас нет подписок на погоду");
+      await ctx.scene.leave();
+      return;
+    }
     const backBtn = { text: "Выйти", data: "exit" };
     const subsListKeyboard = await fetchSubsListKeyboard(userId, backBtn, "👀");
-    const subsCount = subsListKeyboard.reply_markup.inline_keyboard.length;
-    return subsCount - 1 > 0
-      ? ctx.reply(`Ваши текущие подписки:`, subsListKeyboard)
-      : ctx.reply("У вас нет подписок на погоду");
+    return ctx.reply(`Ваши текущие подписки:`, subsListKeyboard);
   } catch (error) {
     console.log(error);
   }
@@ -26,8 +30,12 @@ mySubsScene.on("callback_query", async (ctx) => {
       return await ctx.scene.leave();
     }
 
-    ctx.reply("Подождите, загружаю данные о погоде...");
-    const currentWeather = await getWeather({ city: callbackData.city });
+    const city = callbackData.params;
+    const [lat, lon] = callbackData.params.split("&");
+    const params = lat & lon ? { lat, lon } : { city };
+
+    await ctx.reply("Подождите, загружаю данные о погоде...");
+    const currentWeather = await getWeather(params);
     const {
       weather: [{ description, icon }],
       main: { temp },

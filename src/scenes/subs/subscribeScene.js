@@ -21,6 +21,7 @@ subscribeScene.on("message", async (ctx) => {
     const userId = ctx.message.from.id;
     const bdUserSub = await Subscription.findOne({ userId });
     let params;
+
     if (ctx.message.location) {
       const { latitude: lat, longitude: lon } = ctx.message.location;
       params = { lat, lon };
@@ -28,13 +29,17 @@ subscribeScene.on("message", async (ctx) => {
     } else {
       params = { city: ctx.message.text };
     }
+    console.log('PARAMs',params);
 
     if (!ctx.message.location && !(await isValidCityName(ctx.message.text))) {
       ctx.reply("Населенный пункт не найден.");
       return await ctx.scene.leave();
     } else {
       if (!bdUserSub) {
-        const newSub = new Subscription({ userId, location: params });
+        const newSub = new Subscription({
+          userId,
+          subscriptions: [{ location: params }],
+        });
         await newSub.save();
       } else if (!isSubscribed(params, bdUserSub.subscriptions)) {
         bdUserSub.subscriptions = [

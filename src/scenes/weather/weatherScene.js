@@ -37,8 +37,8 @@ weatherScene.on("message", async (ctx) => {
       wind: { speed },
     } = currentWeather;
 
-    ctx.reply("Подождите, загружаю данные о погоде...");
-    ctx.reply(
+    await ctx.reply("Подождите, загружаю данные о погоде...");
+    await ctx.reply(
       `Погода сейчас (${name}):
       ${iconMap[icon]} ${Math.round(temp)}°C,
       ${description}

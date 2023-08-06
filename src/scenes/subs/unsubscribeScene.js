@@ -7,6 +7,11 @@ const backBtn = { text: "Выйти", data: "exit" };
 
 unsubscribeScene.enter(async (ctx) => {
   const userId = ctx.from.id;
+  const bdUserSub = await Subscription.findOne({ userId });
+  if (!bdUserSub || bdUserSub.subscriptions.length === 0) {
+    ctx.reply("У вас нет подписок на погоду для отписки.");
+    ctx.scene.leave();
+  }
   const replyMsg = await ctx.reply(
     "Ваши подписки:",
     await fetchSubsListKeyboard(userId, backBtn, "❌")
