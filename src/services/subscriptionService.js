@@ -26,7 +26,7 @@ async function fetchSubsListKeyboard(userId, extraBtn, btnChar) {
             `${sub.location.city} ${btnChar}`,
             JSON.stringify({
               params: lat ? `${lat}&${lon}` : city,
-              userId: userId,
+              userId,
             })
           ),
         ];

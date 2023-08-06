@@ -38,9 +38,11 @@ unsubscribeScene.on("callback_query", async (ctx) => {
 
     const userId = data?.userId;
     const user = await Subscription.findOne({ userId });
-    const subIndex = user?.subscriptions.findIndex(
-      (sub) => sub.location.city === data.city
-    );
+    const subIndex = user?.subscriptions.findIndex((sub) => {
+      const [lat, lon] = data.params.split("&");
+      return sub.location.lat == lat && sub.location.lon == lon;
+    });
+
     user.subscriptions = user?.subscriptions.filter((_, i) => i !== subIndex);
     await user.save();
 
@@ -58,7 +60,7 @@ unsubscribeScene.on("callback_query", async (ctx) => {
     ctx.answerCbQuery(msgs.SUCCESS.SUB_DELETE);
   } catch (error) {
     ctx.reply(msgs.ERROR.UNSUBSCRIBE);
-    console.error(logMsgs.ERROR.SCENE, error.message);
+    console.error(logMsgs.ERROR.SCENE, error);
   }
 });
 
