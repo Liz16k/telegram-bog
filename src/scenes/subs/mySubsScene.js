@@ -1,9 +1,8 @@
 import { Scenes, Markup } from "telegraf";
 import { fetchSubsListKeyboard } from "#services/subscriptionService.js";
 import { getWeather } from "#services/weatherService.js";
-import { iconMap } from "#config/constants.js";
+import { iconMap, msgs, logMsgs } from "#config/constants.js";
 import { Subscription } from "#models/Subscription.js";
-import { msgs,logMsgs } from "#config/constants";
 
 const mySubsScene = new Scenes.BaseScene("mySubs");
 mySubsScene.enter(async (ctx) => {

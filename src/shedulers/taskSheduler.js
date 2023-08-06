@@ -1,6 +1,6 @@
 import { schedule } from "node-cron";
 import { fetchUsersTasks } from "#services/taskService.js";
-import { logMsgs, msgs } from "#config/constants";
+import { logMsgs, msgs } from "#config/constants.js";
 
 const createTaskScheduler = ({ ctx, bot, task, userId }) => {
   try {

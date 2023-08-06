@@ -1,4 +1,4 @@
-import { logMsgs } from "#config/constants";
+import { logMsgs } from "#config/constants.js";
 
 async function fetchDBCollection(model, options = {}) {
   try {

@@ -1,6 +1,6 @@
 import { Scenes, Markup } from "telegraf";
 import { attractionsSearch } from "#services/recommendService.js";
-import { msgs, logMsgs } from "#config/constants";
+import { msgs, logMsgs } from "#config/constants.js";
 
 const attractionsScene = new Scenes.BaseScene("attractions");
 

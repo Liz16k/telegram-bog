@@ -1,5 +1,5 @@
 import { getImgUrl } from "#services/imageService.js";
-import { logMsgs, msgs } from "#config/constants";
+import { logMsgs, msgs } from "#config/constants.js";
 
 async function handleImageCommand(ctx) {
   try {
