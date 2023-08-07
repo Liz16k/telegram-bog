@@ -2,7 +2,7 @@ import { Scenes, Markup } from "telegraf";
 const recommendMenuScene = new Scenes.BaseScene("recommendationsMenu");
 
 recommendMenuScene.enter(async (ctx) => {
-  return await ctx.reply(
+  const replyMsg = await ctx.reply(
     `Выберите, что вам порекомендовать:`,
     Markup.inlineKeyboard([
       [
@@ -14,16 +14,24 @@ recommendMenuScene.enter(async (ctx) => {
       .resize()
       .oneTime()
   );
+  ctx.session.menuMsg = { message_id: replyMsg.message_id };
+  return replyMsg;
 });
 
-recommendMenuScene.action("CAFE", (ctx) => {
+recommendMenuScene.action("CAFE", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("cafe");
 });
 
-recommendMenuScene.action("EVENTS", (ctx) => {
+recommendMenuScene.action("EVENTS", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("events");
 });
-recommendMenuScene.action("ATTRACTIONS", (ctx) => {
+recommendMenuScene.action("ATTRACTIONS", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("attractions");
 });
 
