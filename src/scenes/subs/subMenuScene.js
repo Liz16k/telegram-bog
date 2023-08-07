@@ -2,7 +2,7 @@ import { Scenes, Markup } from "telegraf";
 
 const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 subMenuScene.enter(async (ctx) => {
-  return await ctx.replyWithHTML(
+  const message = await ctx.replyWithHTML(
     `
 📃 <b>Мои подписки</b> --> список городов, на погоду в которых вы подписаны
 👀 <b>Оформить подписку</b> --> подписаться на ежедневное уведомление о погоде 
@@ -18,16 +18,24 @@ subMenuScene.enter(async (ctx) => {
       .resize()
       .oneTime()
   );
+  ctx.session.menuMsg = { message_id: message.message_id };
+  return message;
 });
 
-subMenuScene.action("MY_SUBSCRIPTIONS", (ctx) => {
+subMenuScene.action("MY_SUBSCRIPTIONS", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("mySubs");
 });
 
-subMenuScene.action("SUBSCRIBE", (ctx) => {
+subMenuScene.action("SUBSCRIBE", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("subscribe");
 });
-subMenuScene.action("UNSUBSCRIBE", (ctx) => {
+subMenuScene.action("UNSUBSCRIBE", async (ctx) => {
+  const messageId = await ctx.session?.menuMsg?.message_id;
+  await ctx.deleteMessage(messageId);
   return ctx.scene.enter("unsubscribe");
 });
 

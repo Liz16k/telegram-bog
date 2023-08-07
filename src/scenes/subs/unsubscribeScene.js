@@ -31,13 +31,18 @@ unsubscribeScene.on("callback_query", async (ctx) => {
     const cbData = ctx.callbackQuery.data;
     const data = JSON.parse(cbData);
 
+    const chatId = await ctx.session?.unsubMsg?.chatId;
+    const messageId = await ctx.session?.unsubMsg?.messageId;
+
     if (data.type === "exit") {
       ctx.answerCbQuery(msgs.EXIT.SUBS);
+      await ctx.deleteMessage(messageId);
       return await ctx.scene.leave();
     }
 
     const userId = data?.userId;
     const user = await Subscription.findOne({ userId });
+    
     const subIndex = user?.subscriptions.findIndex((sub) => {
       const [lat, lon] = data.params.split("&");
       return sub.location.lat == lat && sub.location.lon == lon;
@@ -45,9 +50,6 @@ unsubscribeScene.on("callback_query", async (ctx) => {
 
     user.subscriptions = user?.subscriptions.filter((_, i) => i !== subIndex);
     await user.save();
-
-    const chatId = await ctx.session?.unsubMsg?.chatId;
-    const messageId = await ctx.session?.unsubMsg?.messageId;
 
     await ctx.telegram.editMessageText(
       chatId,

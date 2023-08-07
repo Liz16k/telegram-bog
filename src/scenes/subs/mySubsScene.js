@@ -5,6 +5,7 @@ import { iconMap, msgs, logMsgs } from "#config/constants.js";
 import { Subscription } from "#models/Subscription.js";
 
 const mySubsScene = new Scenes.BaseScene("mySubs");
+
 mySubsScene.enter(async (ctx) => {
   const userId = ctx.from.id;
   const bdUserSub = await Subscription.findOne({ userId });
@@ -16,7 +17,8 @@ mySubsScene.enter(async (ctx) => {
   }
   const backBtn = { text: "Выйти", data: "exit" };
   const subsListKeyboard = await fetchSubsListKeyboard(userId, backBtn, "👀");
-  return ctx.reply(msgs.CAPTIONS.SUBS, subsListKeyboard);
+  const replyMsg = await ctx.reply(msgs.CAPTIONS.SUBS, subsListKeyboard);
+  ctx.session.replyMsg = { message_id: replyMsg.message_id };
 });
 
 mySubsScene.on("callback_query", async (ctx) => {
@@ -25,6 +27,7 @@ mySubsScene.on("callback_query", async (ctx) => {
 
     if (callbackData.type === "exit") {
       ctx.answerCbQuery(msgs.EXIT.SUBS);
+      await ctx.deleteMessage(await ctx.session.replyMsg.message_id);
       return await ctx.scene.leave();
     }
 
