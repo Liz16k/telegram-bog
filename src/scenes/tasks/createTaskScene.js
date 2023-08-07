@@ -46,7 +46,7 @@ const createTaskScene = new Scenes.WizardScene(
     let interval;
     switch (ctx.callbackQuery.data) {
       case "DAILY": {
-        ctx.wizard.state.interval = 24;
+        ctx.wizard.state.interval = 23;
         break;
       }
       case "HOURLY": {
