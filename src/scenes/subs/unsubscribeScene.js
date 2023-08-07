@@ -29,7 +29,7 @@ unsubscribeScene.enter(async (ctx) => {
 unsubscribeScene.on("callback_query", async (ctx) => {
   try {
     const cbData = ctx.callbackQuery.data;
-    const data = JSON.parse(cbData);
+    const data = await JSON.parse(cbData);
 
     const chatId = await ctx.session?.unsubMsg?.chatId;
     const messageId = await ctx.session?.unsubMsg?.messageId;
@@ -42,10 +42,13 @@ unsubscribeScene.on("callback_query", async (ctx) => {
 
     const userId = data?.userId;
     const user = await Subscription.findOne({ userId });
-    
     const subIndex = user?.subscriptions.findIndex((sub) => {
-      const [lat, lon] = data.params.split("&");
-      return sub.location.lat == lat && sub.location.lon == lon;
+      if (data.params.includes("&")) {
+        const [lat, lon] = data.params.split("&");
+        return sub.location.lat == lat && sub.location.lon == lon;
+      } else {
+        return sub.location.city === data.params;
+      }
     });
 
     user.subscriptions = user?.subscriptions.filter((_, i) => i !== subIndex);
