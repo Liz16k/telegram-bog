@@ -1,5 +1,5 @@
 import { Scenes, Markup } from "telegraf";
-import { saveTaskToDB } from "#services/taskService.js";
+import { saveTaskToDB, fetchUserTasks } from "#services/taskService.js";
 import { createTaskScheduler } from "#shedulers/taskSheduler.js";
 import { msgs } from "#config/constants.js";
 
@@ -9,9 +9,15 @@ const createTaskScene = new Scenes.WizardScene(
     ctx.reply("Введите задачу:");
     return ctx.wizard.next();
   },
-  (ctx) => {
+  async (ctx) => {
     ctx.wizard.state.status = "todo";
-    ctx.wizard.state.name = ctx.message.text;
+    const tasks = await fetchUserTasks(ctx.message.from.id);
+    const taskName = ctx.message.text;
+    ctx.wizard.state.name = taskName;
+    if (tasks.filter((task) => task.name === taskName).length) {
+      ctx.reply("Такая задача уже существует.");
+      return ctx.scene.leave();
+    }
     ctx.reply(
       "Хотите установить напоминание?",
       Markup.inlineKeyboard([
@@ -30,7 +36,7 @@ const createTaskScene = new Scenes.WizardScene(
     if (ctx.callbackQuery.data === "REMINDER_YES") {
       ctx.wizard.state.reminder = true;
       ctx.reply(
-        "Как часто вы хотите получать уведомление о задаче?\n(интервал в часах)):",
+        "Как часто вы хотите получать уведомление о задаче?\n(интервал в часах):",
         Markup.inlineKeyboard([
           [Markup.button.callback("Каждый час", "HOURLY")],
           [Markup.button.callback("Каждые 2 часа", "TWO_HOURLY")],
@@ -77,9 +83,10 @@ const createTaskScene = new Scenes.WizardScene(
     await saveTaskToDB(userId, ctx.wizard.state);
 
     const time = [...ctx.wizard.state.initTime.split(":")];
-    const nextNotifyTime = [new Date().getHours() + ctx.wizard.state.interval, time[1]].join(
-      ":"
-    );
+    const nextNotifyTime = [
+      new Date().getHours() + ctx.wizard.state.interval,
+      time[1],
+    ].join(":");
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
     await ctx.reply(
       `Следующее напоминание о задаче *${ctx.wizard.state.name}* в: ${nextNotifyTime}`
