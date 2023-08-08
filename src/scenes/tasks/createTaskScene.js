@@ -77,7 +77,7 @@ const createTaskScene = new Scenes.WizardScene(
     await saveTaskToDB(userId, ctx.wizard.state);
 
     const time = [...ctx.wizard.state.initTime.split(":")];
-    const nextNotifyTime = [+time[0] + ctx.wizard.state.interval, time[1]].join(
+    const nextNotifyTime = [new Date().getHours() + ctx.wizard.state.interval, time[1]].join(
       ":"
     );
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
