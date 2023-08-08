@@ -24,10 +24,16 @@ recommendMenuScene.action("EVENTS", async (ctx) => {
   await ctx.deleteMessage(messageId);
   return ctx.scene.enter("events");
 });
+
 recommendMenuScene.action("ATTRACTIONS", async (ctx) => {
   const messageId = await ctx.session?.menuMsg?.message_id;
   await ctx.deleteMessage(messageId);
   return ctx.scene.enter("attractions");
+});
+
+recommendMenuScene.on("message", async (ctx) => {
+  ctx.reply(msgs.ERROR.CHOICE);
+  return;
 });
 
 export { recommendMenuScene };
