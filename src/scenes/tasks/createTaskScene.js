@@ -27,6 +27,7 @@ const createTaskScene = new Scenes.WizardScene(
       ctx.reply(msgs.ERROR.CHOICE);
       return;
     }
+    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);
     const userId = await ctx.update.callback_query.from.id;
     if (ctx.callbackQuery.data === "REMINDER_YES") {
       ctx.wizard.state.reminder = true;
@@ -41,8 +42,7 @@ const createTaskScene = new Scenes.WizardScene(
   },
   async (ctx) => {
     const callbackQuery = ctx.update.callback_query;
-    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);
-    
+
     const userId = callbackQuery ? callbackQuery.from.id : ctx.message.from.id;
     switch (callbackQuery?.data) {
       case "TWO_HOURLY": {
@@ -72,19 +72,25 @@ const createTaskScene = new Scenes.WizardScene(
     ctx.wizard.state.initTime = new Date().toLocaleTimeString("it-IT");
     await saveTaskToDB(userId, ctx.wizard.state);
 
-    const time = [...ctx.wizard.state.initTime.split(":")];
+    const { interval, initTime, name } = ctx.wizard.state;
+    const time = [...initTime.split(":")];
+    const estimatedTime = (new Date().getHours() + 3 + interval) % 24;
     const nextNotifyTime = [
-      new Date().getHours() + ctx.wizard.state.interval,
+      calcNextTime(estimatedTime, interval),
       time[1],
     ].join(":");
+
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
-    await ctx.replyWithMarkdownV2(
-      [msgs.SUCCESS.TASK_INFO, `*${ctx.wizard.state.name}*: `].join("\n") +
-        nextNotifyTime
-    );
+    await ctx.reply([msgs.SUCCESS.TASK_INFO, name].join("\n") + nextNotifyTime);
 
     return ctx.scene.leave();
   }
 );
+
+function calcNextTime(estimatedTime, interval) {
+  return estimatedTime < 6 || estimatedTime > 22
+    ? calcNextTime((estimatedTime + interval) % 24, interval)
+    : estimatedTime;
+}
 
 export { createTaskScene };
