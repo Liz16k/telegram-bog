@@ -69,7 +69,7 @@ async function fetchTasksListKeyboard(userId) {
     let keyboard = Markup.inlineKeyboard([
       ...tasks.map((task, i) => [
         Markup.button.callback(
-          `${i + 1}. ${task.name} (${task.status}) ❌`,
+          `${i + 1}. ${task.name} ❌`,
           ["delete", task._id, userId].join("_")
         ),
       ]),
