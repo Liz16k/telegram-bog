@@ -1,7 +1,7 @@
 import { getTasks } from "node-cron";
 import { Markup } from "telegraf";
 import { Tasks } from "#models/Tasks.js";
-import { logMsgs } from "#config/constants.js";
+import { logMsgs, msgs } from "#config/constants.js";
 
 async function fetchUserTasks(userId) {
   try {
@@ -73,7 +73,7 @@ async function fetchTasksListKeyboard(userId) {
           ["delete", task._id, userId].join("_")
         ),
       ]),
-      [Markup.button.callback("Выйти", "exit")],
+      [Markup.button.callback(msgs.KEYBOARD.EXIT, "exit")],
     ])
       .resize()
       .oneTime();

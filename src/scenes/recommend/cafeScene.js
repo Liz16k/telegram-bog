@@ -6,7 +6,7 @@ const cafeScene = new Scenes.BaseScene("cafe");
 cafeScene.enter(async (ctx) => {
   ctx.reply(
     msgs.GEO,
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
       .resize()
       .oneTime()
   );

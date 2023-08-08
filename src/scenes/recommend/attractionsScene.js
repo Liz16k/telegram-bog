@@ -6,8 +6,8 @@ const attractionsScene = new Scenes.BaseScene("attractions");
 
 attractionsScene.enter(async (ctx) => {
   ctx.reply(
-    "Поделитесь своим местоположением",
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+    msgs.GEO,
+    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
       .resize()
       .oneTime()
   );

@@ -3,7 +3,8 @@ import {
   getWeather,
   getCityNameByCoordinates,
 } from "#services/weatherService.js";
-import { iconMap, msgs, logMsgs } from "#config/constants.js";
+import { msgs, logMsgs } from "#config/constants.js";
+import { weatherResponse } from "#utils/weatherResponse";
 
 const weatherScene = new Scenes.BaseScene("weather");
 
@@ -12,7 +13,7 @@ weatherScene.enter((ctx) => {
     msgs.LOCATION,
     Markup.keyboard([
       ["Минск", "Брест", "Витебск"],
-      [Markup.button.locationRequest("Отправить местоположение")],
+      [Markup.button.locationRequest(msgs.KEYBOARD.GEO)],
     ])
       .resize()
       .oneTime()
@@ -30,21 +31,9 @@ weatherScene.on("message", async (ctx) => {
       params = { city: ctx.message.text };
     }
     const currentWeather = await getWeather(params);
-    const {
-      weather: [{ description, icon }],
-      main: { temp },
-      name,
-      wind: { speed },
-    } = currentWeather;
 
     await ctx.reply(msgs.WAIT.WEATHER);
-    await ctx.reply(
-      `Погода сейчас (${name}):
-      ${iconMap[icon]} ${Math.round(temp)}°C,
-      ${description}
-      Ветер: ${speed} м/с`,
-      Markup.removeKeyboard()
-    );
+    await ctx.reply(weatherResponse(currentWeather), Markup.removeKeyboard());
   } catch (error) {
     ctx.reply(msgs.ERROR.WEATHER, Markup.removeKeyboard());
     console.error(logMsgs.ERROR.SCENE, error.message);

@@ -1,18 +1,17 @@
 import { Scenes, Markup } from "telegraf";
+import { msgs } from "#config/constants.js";
+
+const { MY_SUBS, SUBSCRIBE, UNSUBSCRIBE } = msgs.SUBSCRIPTION_MENU;
 
 const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
 subMenuScene.enter(async (ctx) => {
   const message = await ctx.replyWithHTML(
-    `
-📃 <b>Мои подписки</b> --> список городов, на погоду в которых вы подписаны
-👀 <b>Оформить подписку</b> --> подписаться на ежедневное уведомление о погоде 
-❌ <b>Отменить подписку</b> --> отменить подписку на погоду 
-`,
+    msgs.SUBSCRIPTION_MENU,
     Markup.inlineKeyboard([
-      [Markup.button.callback("📃 Мои подписки", "MY_SUBSCRIPTIONS")],
+      [Markup.button.callback(MY_SUBS, "MY_SUBSCRIPTIONS")],
       [
-        Markup.button.callback("👀 Оформить подписку", "SUBSCRIBE"),
-        Markup.button.callback("❌ Отменить подписку", "UNSUBSCRIBE"),
+        Markup.button.callback(SUBSCRIBE, "SUBSCRIBE"),
+        Markup.button.callback(UNSUBSCRIBE, "UNSUBSCRIBE"),
       ],
     ])
       .resize()

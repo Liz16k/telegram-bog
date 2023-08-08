@@ -11,7 +11,7 @@ const subscribeScene = new Scenes.BaseScene("subscribe");
 subscribeScene.enter(async (ctx) => {
   return await ctx.reply(
     msgs.LOCATION,
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
       .resize()
       .oneTime()
   );
@@ -35,7 +35,6 @@ subscribeScene.on("message", async (ctx) => {
       ctx.reply(msgs.NOTFOUND.CITY);
       return await ctx.scene.leave();
     } else {
-
       if (!bdUserSub) {
         const newSub = new Subscription({
           userId,
@@ -56,7 +55,7 @@ subscribeScene.on("message", async (ctx) => {
       return await ctx.scene.leave();
     }
   } catch (error) {
-    ctx.reply("Не удалось подписаться на уведомление о погоде");
+    ctx.reply(msgs.ERROR.WEATHER_SUB);
     console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });

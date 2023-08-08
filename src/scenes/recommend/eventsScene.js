@@ -6,7 +6,7 @@ const eventScene = new Scenes.BaseScene("events");
 eventScene.enter(async (ctx) => {
   ctx.reply(
     msgs.LOCATION,
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
       .resize()
       .oneTime()
   );
