@@ -1,7 +1,8 @@
 import { schedule } from "node-cron";
 import { fetchSubscriptions } from "#services/subscriptionService.js";
 import { getWeather } from "#services/weatherService.js";
-import { iconMap, logMsgs } from "#config/constants.js";
+import { logMsgs } from "#config/constants.js";
+import { weatherResponse } from '#utils/weatherResponse.js';
 
 const weatherSheduler = (bot) => {
   schedule(
@@ -30,22 +31,10 @@ const weatherNotificate = async (bot) => {
         }
 
         const currentWeather = await getWeather(params);
-        const {
-          weather: [{ description, icon }],
-          main: { temp },
-          name,
-          wind: { speed },
-        } = currentWeather;
         const userId = subscriber.userId;
-        const messageText = `
-  Погода сейчас (${name}):
-  ${iconMap[icon]} ${Math.round(temp)}°C,
-  ${description}
-  Ветер: ${speed} м/с
-  `;
 
         bot.telegram
-          .sendMessage(userId, messageText)
+          .sendMessage(userId, weatherResponse(currentWeather))
           .then(() => {
             console.error(logMsgs.SUCCESS.MSG, "на", userId);
             [];

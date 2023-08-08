@@ -34,7 +34,7 @@ myTasksScene.on("callback_query", async (ctx) => {
         chatId,
         messageId,
         undefined,
-        "Список обновлен",
+        msgs.SUCCESS.SUBS_UPDATE,
         await fetchTasksListKeyboard(userId)
       );
 

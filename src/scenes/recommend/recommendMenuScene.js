@@ -3,13 +3,13 @@ const recommendMenuScene = new Scenes.BaseScene("recommendationsMenu");
 
 recommendMenuScene.enter(async (ctx) => {
   const replyMsg = await ctx.reply(
-    `Выберите, что вам порекомендовать:`,
+    msgs.CAPTIONS.RECOMMENDATION,
     Markup.inlineKeyboard([
       [
-        Markup.button.callback("🥞 Кафе", "CAFE"),
-        Markup.button.callback("🎊 События", "EVENTS"),
+        Markup.button.callback(msgs.KEYBOARD.CAFE, "CAFE"),
+        Markup.button.callback(msgs.KEYBOARD.EVENTS, "EVENTS"),
       ],
-      [Markup.button.callback("🗿 Достопримечательности", "ATTRACTIONS")],
+      [Markup.button.callback(msgs.KEYBOARD.ATTRACTIONS, "ATTRACTIONS")],
     ])
       .resize()
       .oneTime()

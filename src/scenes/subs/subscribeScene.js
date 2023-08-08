@@ -1,17 +1,15 @@
-import axios from "axios";
 import { Scenes, Markup } from "telegraf";
 import { Subscription } from "#models/Subscription.js";
 import { getCityNameByCoordinates } from "#services/weatherService.js";
-import envVariables from "#config/index.js";
 import { msgs, logMsgs } from "#config/constants.js";
-const { OPEN_WEATHER_KEY } = envVariables;
+import { isValidCityName } from '#utils/isValidCityName.js';
 
 const subscribeScene = new Scenes.BaseScene("subscribe");
 
 subscribeScene.enter(async (ctx) => {
   return await ctx.reply(
     msgs.LOCATION,
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
+    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
       .resize()
       .oneTime()
   );
@@ -35,7 +33,6 @@ subscribeScene.on("message", async (ctx) => {
       ctx.reply(msgs.NOTFOUND.CITY);
       return await ctx.scene.leave();
     } else {
-
       if (!bdUserSub) {
         const newSub = new Subscription({
           userId,
@@ -56,7 +53,7 @@ subscribeScene.on("message", async (ctx) => {
       return await ctx.scene.leave();
     }
   } catch (error) {
-    ctx.reply("Не удалось подписаться на уведомление о погоде");
+    ctx.reply(msgs.ERROR.WEATHER_SUB);
     console.error(logMsgs.ERROR.SCENE, error.message);
   }
 });
@@ -64,25 +61,6 @@ subscribeScene.on("message", async (ctx) => {
 function isSubscribed(location, subscriptions) {
   return !!subscriptions.filter((sub) => sub.location.city === location.city)
     .length;
-}
-
-async function isValidCityName(name) {
-  try {
-    const options = {
-      q: name,
-      appid: OPEN_WEATHER_KEY,
-      limit: 1,
-    };
-    const response = await axios.get(
-      "http://api.openweathermap.org/geo/1.0/direct",
-      {
-        params: options,
-      }
-    );
-    return response.data.length;
-  } catch (error) {
-    console.error(logMsgs.ERROR.FETCH, error.message);
-  }
 }
 
 export { subscribeScene };

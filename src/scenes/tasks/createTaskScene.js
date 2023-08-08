@@ -6,7 +6,7 @@ import { msgs } from "#config/constants.js";
 const createTaskScene = new Scenes.WizardScene(
   "createTask",
   (ctx) => {
-    ctx.reply("Введите задачу:");
+    ctx.reply(msgs.TASK_START);
     return ctx.wizard.next();
   },
   async (ctx) => {
@@ -15,32 +15,32 @@ const createTaskScene = new Scenes.WizardScene(
     const taskName = ctx.message.text;
     ctx.wizard.state.name = taskName;
     if (tasks.filter((task) => task.name === taskName).length) {
-      ctx.reply("Такая задача уже существует.");
+      ctx.reply(msgs.ERROR.TASK_EXIST);
       return ctx.scene.leave();
     }
     ctx.reply(
-      "Хотите установить напоминание?",
+      msgs.TASK_TONOTIFY,
       Markup.inlineKeyboard([
-        Markup.button.callback("Да", "REMINDER_YES"),
-        Markup.button.callback("Нет", "REMINDER_NO"),
+        Markup.button.callback(msgs.KEYBOARD.YES, "REMINDER_YES"),
+        Markup.button.callback(msgs.KEYBOARD.NO, "REMINDER_NO"),
       ])
     );
     return ctx.wizard.next();
   },
   async (ctx) => {
     if (!ctx.callbackQuery) {
-      ctx.reply("Сделайте выбор");
+      ctx.reply(msgs.ERROR.CHOICE);
       return;
     }
     const userId = await ctx.update.callback_query.from.id;
     if (ctx.callbackQuery.data === "REMINDER_YES") {
       ctx.wizard.state.reminder = true;
       ctx.reply(
-        "Как часто вы хотите получать уведомление о задаче?\n(интервал в часах):",
+        msgs.TASK_INTERVAL,
         Markup.inlineKeyboard([
-          [Markup.button.callback("Каждый час", "HOURLY")],
-          [Markup.button.callback("Каждые 2 часа", "TWO_HOURLY")],
-          [Markup.button.callback("Каждые 4 часа", "FOUR_HOURLY")],
+          [Markup.button.callback(msgs.KEYBOARD.EVERY_HOUR, "HOURLY")],
+          [Markup.button.callback(msgs.KEYBOARD.TWO_HOURLY, "TWO_HOURLY")],
+          [Markup.button.callback(msgs.FOUR_HOURLY.EVERY_HOUR, "FOUR_HOURLY")],
         ])
       );
       return ctx.wizard.next();
@@ -72,7 +72,7 @@ const createTaskScene = new Scenes.WizardScene(
         if (!isNaN(interval) && interval > 0 && interval < 13) {
           ctx.wizard.state.interval = interval;
         } else {
-          ctx.reply("Введите количество часов от 1 до 12:");
+          ctx.reply(msgs.ERROR.TASK_INTERVAL);
           return;
         }
       }
@@ -88,10 +88,10 @@ const createTaskScene = new Scenes.WizardScene(
       time[1],
     ].join(":");
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
-    await ctx.reply(
-      `Следующее напоминание о задаче *${ctx.wizard.state.name}* в: ${nextNotifyTime}`
+    await ctx.replyWithMarkdownV2(
+      `${msgs.SUCCESS.TASK_INFO} *${ctx.wizard.state.name}*:\n${nextNotifyTime}`
     );
-    ctx.answerCbQuery("💤Напоминания не приходят вне промежутка 6-22ч");
+    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);
 
     return ctx.scene.leave();
   }
