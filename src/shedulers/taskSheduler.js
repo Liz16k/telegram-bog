@@ -6,10 +6,11 @@ const createTaskScheduler = ({ ctx, bot, task, userId }) => {
   try {
     task ??= ctx.wizard.state;
     bot ??= ctx.bot;
-    userId ??= ctx.update.callback_query.from.id;
-    const { name, interval } = task;
+    userId ??= ctx.update.callback_query?.from.id ?? ctx.message?.from.id;
+    const { name, interval, initTime } = task;
+    const min = initTime?.split(":")[1] ?? 0;
     return schedule(
-      `0 */${interval} * * *`,
+      `${min} 6-22/${interval} * * *`, //6-22 means in work-time
       () => {
         bot.telegram
           .sendMessage(userId, `${msgs.NOTIFY} ${name}`)
