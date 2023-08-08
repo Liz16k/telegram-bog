@@ -1,15 +1,11 @@
 import { Scenes, Markup } from "telegraf";
 import { cafeSearch } from "#services/recommendService.js";
 import { msgs, logMsgs } from "#config/constants.js";
+import { sendGeoKeyboard } from "#config/keyboards.js";
 
 const cafeScene = new Scenes.BaseScene("cafe");
 cafeScene.enter(async (ctx) => {
-  ctx.reply(
-    msgs.GEO,
-    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
-      .resize()
-      .oneTime()
-  );
+  ctx.reply(msgs.GEO, sendGeoKeyboard());
 });
 
 cafeScene.on("message", async (ctx) => {

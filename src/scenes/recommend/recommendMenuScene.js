@@ -1,18 +1,13 @@
-import { Scenes, Markup } from "telegraf";
+import { Scenes } from "telegraf";
+import { recommendMenuKeyboard } from "#config/keyboards.js";
+import { msgs } from "#config/constants.js";
+
 const recommendMenuScene = new Scenes.BaseScene("recommendationsMenu");
 
 recommendMenuScene.enter(async (ctx) => {
   const replyMsg = await ctx.reply(
     msgs.CAPTIONS.RECOMMENDATION,
-    Markup.inlineKeyboard([
-      [
-        Markup.button.callback(msgs.KEYBOARD.CAFE, "CAFE"),
-        Markup.button.callback(msgs.KEYBOARD.EVENTS, "EVENTS"),
-      ],
-      [Markup.button.callback(msgs.KEYBOARD.ATTRACTIONS, "ATTRACTIONS")],
-    ])
-      .resize()
-      .oneTime()
+    recommendMenuKeyboard()
   );
   ctx.session.menuMsg = { message_id: replyMsg.message_id };
   return replyMsg;

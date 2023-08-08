@@ -2,7 +2,7 @@ import { schedule } from "node-cron";
 import { fetchSubscriptions } from "#services/subscriptionService.js";
 import { getWeather } from "#services/weatherService.js";
 import { logMsgs } from "#config/constants.js";
-import { weatherResponse } from '#utils/weatherResponse.js';
+import { weatherResponse } from "#utils/weatherResponse.js";
 
 const weatherSheduler = (bot) => {
   schedule(

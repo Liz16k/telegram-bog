@@ -2,18 +2,14 @@ import { Scenes, Markup } from "telegraf";
 import { Subscription } from "#models/Subscription.js";
 import { getCityNameByCoordinates } from "#services/weatherService.js";
 import { msgs, logMsgs } from "#config/constants.js";
-import { isValidCityName } from '#utils/isValidCityName.js';
+import { isValidCityName } from "#utils/isValidCityName.js";
+import { sendGeoKeyboard } from "#config/keyboards.js";
 
 const subscribeScene = new Scenes.BaseScene("subscribe");
 
-subscribeScene.enter(async (ctx) => {
-  return await ctx.reply(
-    msgs.LOCATION,
-    Markup.keyboard([Markup.button.locationRequest(msgs.KEYBOARD.GEO)])
-      .resize()
-      .oneTime()
-  );
-});
+subscribeScene.enter(
+  async (ctx) => await ctx.reply(msgs.LOCATION, sendGeoKeyboard())
+);
 
 subscribeScene.on("message", async (ctx) => {
   try {

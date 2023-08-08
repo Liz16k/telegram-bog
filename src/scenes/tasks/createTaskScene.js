@@ -2,6 +2,7 @@ import { Scenes, Markup } from "telegraf";
 import { saveTaskToDB, fetchUserTasks } from "#services/taskService.js";
 import { createTaskScheduler } from "#shedulers/taskSheduler.js";
 import { msgs } from "#config/constants.js";
+import { toNotifyKeyboard, chooseIntervalKeyboard } from "#config/keyboards.js";
 
 const createTaskScene = new Scenes.WizardScene(
   "createTask",
@@ -18,13 +19,7 @@ const createTaskScene = new Scenes.WizardScene(
       ctx.reply(msgs.ERROR.TASK_EXIST);
       return ctx.scene.leave();
     }
-    ctx.reply(
-      msgs.TASK_TONOTIFY,
-      Markup.inlineKeyboard([
-        Markup.button.callback(msgs.KEYBOARD.YES, "REMINDER_YES"),
-        Markup.button.callback(msgs.KEYBOARD.NO, "REMINDER_NO"),
-      ])
-    );
+    ctx.reply(msgs.TASK_TONOTIFY, toNotifyKeyboard());
     return ctx.wizard.next();
   },
   async (ctx) => {
@@ -35,14 +30,7 @@ const createTaskScene = new Scenes.WizardScene(
     const userId = await ctx.update.callback_query.from.id;
     if (ctx.callbackQuery.data === "REMINDER_YES") {
       ctx.wizard.state.reminder = true;
-      ctx.reply(
-        msgs.TASK_INTERVAL,
-        Markup.inlineKeyboard([
-          [Markup.button.callback(msgs.KEYBOARD.EVERY_HOUR, "HOURLY")],
-          [Markup.button.callback(msgs.KEYBOARD.TWO_HOURLY, "TWO_HOURLY")],
-          [Markup.button.callback(msgs.FOUR_HOURLY.EVERY_HOUR, "FOUR_HOURLY")],
-        ])
-      );
+      ctx.reply(msgs.TASK_INTERVAL, chooseIntervalKeyboard());
       return ctx.wizard.next();
     } else {
       ctx.wizard.state.reminder = false;
@@ -53,6 +41,8 @@ const createTaskScene = new Scenes.WizardScene(
   },
   async (ctx) => {
     const callbackQuery = ctx.update.callback_query;
+    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);
+    
     const userId = callbackQuery ? callbackQuery.from.id : ctx.message.from.id;
     switch (callbackQuery?.data) {
       case "TWO_HOURLY": {
@@ -89,9 +79,9 @@ const createTaskScene = new Scenes.WizardScene(
     ].join(":");
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
     await ctx.replyWithMarkdownV2(
-      `${msgs.SUCCESS.TASK_INFO} *${ctx.wizard.state.name}*:\n${nextNotifyTime}`
+      [msgs.SUCCESS.TASK_INFO, `*${ctx.wizard.state.name}*: `].join("\n") +
+        nextNotifyTime
     );
-    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);    ctx.answerCbQuery(msgs.SUCCESS.TASK_HINT);
 
     return ctx.scene.leave();
   }
