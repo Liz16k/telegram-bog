@@ -1,22 +1,11 @@
 import { Scenes, Markup } from "telegraf";
 import { msgs } from "#config/constants.js";
-
-const { MY_SUBS, SUBSCRIBE, UNSUBSCRIBE } = msgs.SUBSCRIPTION_MENU;
+import { subMenuKeyboard } from "#config/keyboards.js";
 
 const subMenuScene = new Scenes.BaseScene("subscriptionMenu");
+
 subMenuScene.enter(async (ctx) => {
-  const message = await ctx.replyWithHTML(
-    msgs.SUBSCRIPTION_MENU,
-    Markup.inlineKeyboard([
-      [Markup.button.callback(MY_SUBS, "MY_SUBSCRIPTIONS")],
-      [
-        Markup.button.callback(SUBSCRIBE, "SUBSCRIBE"),
-        Markup.button.callback(UNSUBSCRIBE, "UNSUBSCRIBE"),
-      ],
-    ])
-      .resize()
-      .oneTime()
-  );
+  const message = await ctx.reply(msgs.SUBSCRIPTION_MENU.CAPTION, subMenuKeyboard());
   ctx.session.menuMsg = { message_id: message.message_id };
   return message;
 });

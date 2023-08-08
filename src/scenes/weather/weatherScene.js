@@ -4,20 +4,13 @@ import {
   getCityNameByCoordinates,
 } from "#services/weatherService.js";
 import { msgs, logMsgs } from "#config/constants.js";
-import { weatherResponse } from "#utils/weatherResponse";
+import { weatherResponse } from "#utils/weatherResponse.js";
+import { weatherKeyboard } from "#config/keyboards.js";
 
 const weatherScene = new Scenes.BaseScene("weather");
 
 weatherScene.enter((ctx) => {
-  ctx.reply(
-    msgs.LOCATION,
-    Markup.keyboard([
-      ["Минск", "Брест", "Витебск"],
-      [Markup.button.locationRequest(msgs.KEYBOARD.GEO)],
-    ])
-      .resize()
-      .oneTime()
-  );
+  return ctx.reply(msgs.LOCATION, weatherKeyboard());
 });
 
 weatherScene.on("message", async (ctx) => {
