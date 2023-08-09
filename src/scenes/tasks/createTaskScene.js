@@ -81,9 +81,7 @@ const createTaskScene = new Scenes.WizardScene(
     ].join(":");
 
     await ctx.reply(msgs.SUCCESS.TASK_CREATE);
-    await ctx.replyWithMarkdownV2(
-      [msgs.SUCCESS.TASK_INFO, `*${name}*: `].join("\n") + nextNotifyTime
-    );
+    await ctx.reply([msgs.SUCCESS.TASK_INFO, name, nextNotifyTime].join("\n"));
 
     return ctx.scene.leave();
   }
