@@ -1,16 +1,12 @@
 import { Scenes, Markup } from "telegraf";
 import { attractionsSearch } from "#services/recommendService.js";
 import { msgs, logMsgs } from "#config/constants.js";
+import { sendGeoKeyboard } from "#config/keyboards.js";
 
 const attractionsScene = new Scenes.BaseScene("attractions");
 
 attractionsScene.enter(async (ctx) => {
-  ctx.reply(
-    "Поделитесь своим местоположением",
-    Markup.keyboard([Markup.button.locationRequest("Отправить местоположение")])
-      .resize()
-      .oneTime()
-  );
+  ctx.reply(msgs.GEO, sendGeoKeyboard());
 });
 
 attractionsScene.on("message", async (ctx) => {

@@ -1,7 +1,8 @@
 import { getTasks } from "node-cron";
 import { Markup } from "telegraf";
 import { Tasks } from "#models/Tasks.js";
-import { logMsgs } from "#config/constants.js";
+import { logMsgs, msgs } from "#config/constants.js";
+import { tasksToDeleteKeyboard } from "#config/keyboards.js";
 
 async function fetchUserTasks(userId) {
   try {
@@ -65,19 +66,7 @@ async function deleteTaskSheduler(shedulerId) {
 async function fetchTasksListKeyboard(userId) {
   try {
     const tasks = await fetchUserTasks(userId);
-
-    let keyboard = Markup.inlineKeyboard([
-      ...tasks.map((task, i) => [
-        Markup.button.callback(
-          `${i + 1}. ${task.name} (${task.status}) ❌`,
-          ["delete", task._id, userId].join("_")
-        ),
-      ]),
-      [Markup.button.callback("Выйти", "exit")],
-    ])
-      .resize()
-      .oneTime();
-    return keyboard;
+    return tasksToDeleteKeyboard(tasks, userId);
   } catch (error) {
     console.error(logMsgs.ERROR.FETCH, error.message);
   }

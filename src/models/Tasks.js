@@ -6,6 +6,7 @@ const TaskSchema = new Schema({
   reminder: Boolean,
   shedulerId: String,
   interval: Number,
+  initTime: String,
 });
 
 const TasksSchema = new Schema({

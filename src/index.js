@@ -15,7 +15,7 @@ const dbURL = `${DATABASE_URL}?retryWrites=true&w=majority`;
 
 mongoose.connect(dbURL);
 mongoose.connection.on("error", (err) => {
-  console.error(logMsgs.ERROR.DB, logMsgs.DB.CONNECT, err);
+  console.error(logMsgs.ERROR.DB.CONNECT, err);
   process.exit(1);
 });
 

@@ -1,18 +1,13 @@
-import { Scenes, Markup } from "telegraf";
+import { Scenes } from "telegraf";
+import { recommendMenuKeyboard } from "#config/keyboards.js";
+import { msgs } from "#config/constants.js";
+
 const recommendMenuScene = new Scenes.BaseScene("recommendationsMenu");
 
 recommendMenuScene.enter(async (ctx) => {
   const replyMsg = await ctx.reply(
-    `Выберите, что вам порекомендовать:`,
-    Markup.inlineKeyboard([
-      [
-        Markup.button.callback("🥞 Кафе", "CAFE"),
-        Markup.button.callback("🎊 События", "EVENTS"),
-      ],
-      [Markup.button.callback("🗿 Достопримечательности", "ATTRACTIONS")],
-    ])
-      .resize()
-      .oneTime()
+    msgs.CAPTIONS.RECOMMENDATION,
+    recommendMenuKeyboard()
   );
   ctx.session.menuMsg = { message_id: replyMsg.message_id };
   return replyMsg;
@@ -29,10 +24,16 @@ recommendMenuScene.action("EVENTS", async (ctx) => {
   await ctx.deleteMessage(messageId);
   return ctx.scene.enter("events");
 });
+
 recommendMenuScene.action("ATTRACTIONS", async (ctx) => {
   const messageId = await ctx.session?.menuMsg?.message_id;
   await ctx.deleteMessage(messageId);
   return ctx.scene.enter("attractions");
+});
+
+recommendMenuScene.on("message", async (ctx) => {
+  ctx.reply(msgs.ERROR.CHOICE);
+  return;
 });
 
 export { recommendMenuScene };

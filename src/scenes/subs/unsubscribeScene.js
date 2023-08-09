@@ -1,10 +1,9 @@
 import { Scenes } from "telegraf";
 import { fetchSubsListKeyboard } from "#services/subscriptionService.js";
 import { Subscription } from "#models/Subscription.js";
-import { msgs, logMsgs } from "#config/constants.js";
+import { msgs, logMsgs, btns } from "#config/constants.js";
 
 const unsubscribeScene = new Scenes.BaseScene("unsubscribe");
-const backBtn = { text: "Выйти", data: "exit" };
 
 unsubscribeScene.enter(async (ctx) => {
   const userId = ctx.from.id;
@@ -15,7 +14,7 @@ unsubscribeScene.enter(async (ctx) => {
   }
   const replyMsg = await ctx.reply(
     msgs.CAPTIONS.SUBS,
-    await fetchSubsListKeyboard(userId, backBtn, "❌")
+    await fetchSubsListKeyboard(userId, btns.exitBtn, "❌")
   );
   const messageId = replyMsg?.message_id;
   const chatId = ctx.chat.id;
@@ -58,8 +57,8 @@ unsubscribeScene.on("callback_query", async (ctx) => {
       chatId,
       messageId,
       undefined,
-      "Список обновлен",
-      await fetchSubsListKeyboard(userId, backBtn, "❌")
+      msgs.SUCCESS.SUBS_UPDATE,
+      await fetchSubsListKeyboard(userId, btns.exitBtn, "❌")
     );
 
     ctx.answerCbQuery(msgs.SUCCESS.SUB_DELETE);
